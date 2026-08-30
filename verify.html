@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Alumni Verification</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f2f5f8;
+    color:#17233c;
+}
+
+.container{
+    max-width:700px;
+    margin:30px auto;
+    padding:15px;
+}
+
+.card{
+    background:white;
+    border-radius:15px;
+    overflow:hidden;
+    box-shadow:0 5px 25px rgba(0,0,0,.12);
+}
+
+/* LOGOS */
+
+.logos{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:25px;
+    background:white;
+    padding:18px;
+}
+
+.logo-box{
+    width:100px;
+    height:90px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.logo-box img{
+    max-width:90px;
+    max-height:85px;
+    object-fit:contain;
+}
+
+/* HEADER */
+
+.header{
+    background:#082d63;
+    color:white;
+    text-align:center;
+    padding:22px;
+}
+
+.header h1{
+    margin:0;
+    font-size:25px;
+}
+
+.header p{
+    margin:7px 0 0;
+    font-size:16px;
+}
+
+/* PROFILE */
+
+.profile{
+    padding:22px;
+}
+
+/* VERIFY BOX */
+
+.verify-box{
+    background:#f7f9fc;
+    border:1px solid #dfe5ec;
+    border-radius:12px;
+    padding:20px;
+    margin-bottom:22px;
+}
+
+.verify-title{
+    text-align:center;
+    color:#082d63;
+    font-size:20px;
+    font-weight:bold;
+    margin-bottom:15px;
+}
+
+#alumniId{
+    width:100%;
+    padding:14px;
+    border:1px solid #cbd3dc;
+    border-radius:8px;
+    font-size:16px;
+    text-align:center;
+    outline:none;
+    margin-bottom:12px;
+}
+
+#alumniId:focus{
+    border-color:#082d63;
+}
+
+.verify-button{
+    width:100%;
+    padding:14px;
+    border:0;
+    border-radius:8px;
+    background:#082d63;
+    color:white;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.verify-button:disabled{
+    opacity:.7;
+    cursor:not-allowed;
+}
+
+/* VERIFIED */
+
+.verified{
+    text-align:center;
+    color:#168447;
+    font-weight:bold;
+    font-size:20px;
+    margin-bottom:20px;
+}
+
+/* ROW */
+
+.row{
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    padding:12px 5px;
+    border-bottom:1px solid #e1e5ea;
+}
+
+.label{
+    font-weight:bold;
+    color:#082d63;
+}
+
+.value{
+    text-align:right;
+    word-break:break-word;
+}
+
+/* STATUS */
+
+.status{
+    text-align:center;
+    margin-top:20px;
+    padding:13px;
+    border-radius:8px;
+    background:#e9f8ef;
+    color:#168447;
+    font-weight:bold;
+    line-height:1.5;
+}
+
+/* ERROR */
+
+.error{
+    text-align:center;
+    padding:25px 15px;
+    color:#d62828;
+    font-size:16px;
+}
+
+.error-title{
+    font-size:20px;
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+/* LOADING */
+
+.loading{
+    text-align:center;
+    padding:20px;
+    color:#082d63;
+    font-weight:bold;
+}
+
+/* HIDDEN */
+
+.hidden{
+    display:none;
+}
+
+/* FOOTER */
+
+.footer{
+    background:#082d63;
+    color:white;
+    text-align:center;
+    padding:12px;
+    font-size:13px;
+}
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+    .container{
+        margin:15px auto;
+        padding:10px;
+    }
+
+    .header h1{
+        font-size:22px;
+    }
+
+    .profile{
+        padding:18px 15px;
+    }
+
+    .row{
+        flex-direction:column;
+        gap:5px;
+    }
+
+    .value{
+        text-align:left;
+    }
+
+    .logos{
+        gap:10px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+<div class="card">
+
+
+<!-- LOGOS -->
+
+<div class="logos">
+
+    <div class="logo-box">
+
+        <img
+            src="alumni-logo.png"
+            alt="Alumni Association"
+            onerror="this.style.display='none';"
+        >
+
+    </div>
+
+
+    <div class="logo-box">
+
+        <img
+            src="diamond-jubilee.png"
+            alt="Diamond Jubilee"
+            onerror="this.style.display='none';"
+        >
+
+    </div>
+
+</div>
+
+
+<!-- HEADER -->
+
+<div class="header">
+
+    <h1>PAHARCHANDA HIGH SCHOOL</h1>
+
+    <p>ALUMNI VERIFICATION</p>
+
+</div>
+
+
+<!-- CONTENT -->
+
+<div class="profile">
+
+
+    <!-- VERIFICATION FORM -->
+
+    <div
+        id="verifyBox"
+        class="verify-box"
+    >
+
+        <div class="verify-title">
+            Verify Alumni
+        </div>
+
+
+        <input
+            type="text"
+            id="alumniId"
+            placeholder="Enter Alumni ID"
+            autocomplete="off"
+        >
+
+
+        <button
+            type="button"
+            id="verifyButton"
+            class="verify-button"
+        >
+            VERIFY ALUMNI
+        </button>
+
+    </div>
+
+
+    <!-- RESULT -->
+
+    <div id="result">
+
+        <div class="loading">
+            Enter Alumni ID to verify.
+        </div>
+
+    </div>
+
+
+    <!-- STATUS -->
+
+    <div class="status">
+
+        Paharchanda High School Alumni Association
+
+        <br>
+
+        Diamond Jubilee 2027
+
+    </div>
+
+
+</div>
+
+
+<!-- FOOTER -->
+
+<div class="footer">
+
+    Official Alumni Verification Portal
+
+</div>
+
+
+</div>
+
+</div>
+
+
+<script>
+
+/* =========================================
+   SUPABASE CONFIG
+========================================= */
+
+const SUPABASE_URL =
+    "https://diygnjsjlhekgmkhcnzr.supabase.co";
+
+const SUPABASE_KEY =
+    "sb_publishable_5qBgqDKVMl_0DegM2W2MrA_BfSWDVxf";
+
+const supabaseClient =
+    supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+/* =========================================
+   ELEMENTS
+========================================= */
+
+const alumniIdInput =
+    document.getElementById("alumniId");
+
+const verifyButton =
+    document.getElementById("verifyButton");
+
+const verifyBox =
+    document.getElementById("verifyBox");
+
+const result =
+    document.getElementById("result");
+
+
+/* =========================================
+   SAFE TEXT
+========================================= */
+
+function safe(value){
+
+    if(
+        value === null ||
+        value === undefined ||
+        value === ""
+    ){
+        return "Not provided";
+    }
+
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
+
+
+/* =========================================
+   ROW
+========================================= */
+
+function row(label,value){
+
+    return `
+
+        <div class="row">
+
+            <div class="label">
+                ${safe(label)}
+            </div>
+
+            <div class="value">
+                ${safe(value)}
+            </div>
+
+        </div>
+
+    `;
+}
+
+
+/* =========================================
+   ERROR
+========================================= */
+
+function showError(message){
+
+    result.innerHTML = `
+
+        <div class="error">
+
+            <div class="error-title">
+                ❌ Verification Failed
+            </div>
+
+            ${safe(message)}
+
+        </div>
+
+    `;
+
+}
+
+
+/* =========================================
+   VERIFY ALUMNI
+========================================= */
+
+async function verifyAlumni(){
+
+    const id =
+        alumniIdInput.value.trim();
+
+
+    /* EMPTY */
+
+    if(!id){
+
+        showError(
+            "Please enter an Alumni ID."
+        );
+
+        return;
+
+    }
+
+
+    /* LOADING */
+
+    verifyButton.disabled = true;
+
+    verifyButton.innerText =
+        "VERIFYING...";
+
+
+    result.innerHTML = `
+
+        <div class="loading">
+            Verifying Alumni ID...
+        </div>
+
+    `;
+
+
+    try{
+
+        /*
+         IMPORTANT:
+         Alumni ID is stored in member_id
+        */
+
+        const response =
+            await supabaseClient
+                .from("alumni")
+                .select("*")
+                .eq("member_id", id)
+                .maybeSingle();
+
+
+        console.log(
+            "Verification response:",
+            response
+        );
+
+
+        /* SUPABASE ERROR */
+
+        if(response.error){
+
+            console.error(
+                "Supabase Error:",
+                response.error
+            );
+
+            showError(
+                "Unable to verify Alumni ID. Please check Supabase table and RLS policy."
+            );
+
+            return;
+
+        }
+
+
+        /* RECORD NOT FOUND */
+
+        if(!response.data){
+
+            showError(
+                "Alumni record not found for ID: " + id
+            );
+
+            return;
+
+        }
+
+
+        /* SUCCESS */
+
+        const person =
+            response.data;
+
+
+        result.innerHTML = `
+
+            <div class="verified">
+                ✓ VERIFIED ALUMNI
+            </div>
+
+            ${row(
+                "Member ID",
+                person.member_id
+            )}
+
+            ${row(
+                "Name",
+                person.name
+            )}
+
+            ${row(
+                "Father's Name",
+                person.father_name
+            )}
+
+            ${row(
+                "Mother's Name",
+                person.mother_name
+            )}
+
+            ${row(
+                "SSC Year",
+                person.ssc_year
+            )}
+
+            ${row(
+                "Roll",
+                person.roll
+            )}
+
+            ${row(
+                "Registration No.",
+                person.registration_no
+            )}
+
+            ${row(
+                "Blood Group",
+                person.blood_group
+            )}
+
+            ${row(
+                "Education",
+                person.education
+            )}
+
+            ${row(
+                "Profession",
+                person.profession
+            )}
+
+            ${row(
+                "Phone",
+                person.phone
+            )}
+
+            ${row(
+                "Email",
+                person.email
+            )}
+
+            ${row(
+                "Address",
+                person.address
+            )}
+
+        `;
+
+
+        /* HIDE SEARCH */
+
+        verifyBox.classList.add("hidden");
+
+
+        /* UPDATE URL */
+
+        const newUrl =
+            window.location.pathname +
+            "?id=" +
+            encodeURIComponent(id);
+
+
+        window.history.replaceState(
+            {},
+            "",
+            newUrl
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "Verification Error:",
+            error
+        );
+
+
+        showError(
+            "Something went wrong while verifying the Alumni ID."
+        );
+
+    }
+
+
+    verifyButton.disabled = false;
+
+    verifyButton.innerText =
+        "VERIFY ALUMNI";
+
+}
+
+
+/* =========================================
+   BUTTON CLICK
+========================================= */
+
+verifyButton.addEventListener(
+    "click",
+    verifyAlumni
+);
+
+
+/* =========================================
+   ENTER KEY
+========================================= */
+
+alumniIdInput.addEventListener(
+    "keydown",
+    function(event){
+
+        if(event.key === "Enter"){
+
+            verifyAlumni();
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   QR CODE / URL VERIFICATION
+========================================= */
+
+async function checkUrlId(){
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    const id =
+        params.get("id");
+
+
+    if(!id){
+
+        return;
+
+    }
+
+
+    alumniIdInput.value =
+        id;
+
+
+    await verifyAlumni();
+
+}
+
+
+/* =========================================
+   START
+========================================= */
+
+checkUrlId();
+
+</script>
+
+
+</body>
+
+</html>
