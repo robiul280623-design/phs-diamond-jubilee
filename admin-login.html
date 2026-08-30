@@ -1,0 +1,765 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<meta name="theme-color"
+content="#071c2c">
+
+<title>
+PHS Alumni Association | Admin Login
+</title><style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+body {
+
+    min-height: 100vh;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background:
+        radial-gradient(
+            circle at 20% 10%,
+            rgba(19,91,122,.35),
+            transparent 30%
+        ),
+
+        radial-gradient(
+            circle at 85% 90%,
+            rgba(184,134,11,.18),
+            transparent 28%
+        ),
+
+        linear-gradient(
+            135deg,
+            #03131f,
+            #062b3f 50%,
+            #0a4963
+        );
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 25px;
+
+    overflow-x: hidden;
+
+}
+
+
+/* =========================================
+   BACKGROUND DECORATION
+========================================= */
+
+.bg-shape {
+
+    position: fixed;
+
+    border-radius: 50%;
+
+    border:
+        1px solid
+        rgba(255,255,255,.08);
+
+    pointer-events: none;
+
+}
+
+
+.shape-one {
+
+    width: 430px;
+
+    height: 430px;
+
+    top: -250px;
+
+    right: -120px;
+
+}
+
+
+.shape-two {
+
+    width: 360px;
+
+    height: 360px;
+
+    bottom: -220px;
+
+    left: -130px;
+
+}
+
+
+/* =========================================
+   MAIN LOGIN CARD
+========================================= */
+
+.login-card {
+
+    width: 100%;
+
+    max-width: 470px;
+
+    background:
+        rgba(255,255,255,.98);
+
+    border-radius: 26px;
+
+    padding: 42px 42px 32px;
+
+    box-shadow:
+        0 30px 80px
+        rgba(0,0,0,.38);
+
+    position: relative;
+
+    z-index: 5;
+
+    animation:
+        cardIn .6s ease;
+
+}
+
+
+@keyframes cardIn {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(25px)
+            scale(.97);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+
+    }
+
+}
+
+
+/* =========================================
+   BRAND HEADER
+========================================= */
+
+.brand {
+
+    text-align: center;
+
+    margin-bottom: 30px;
+
+}
+
+
+.logo {
+
+    width: 82px;
+
+    height: 82px;
+
+    margin:
+        0 auto 18px;
+
+    border-radius: 22px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #062b3f,
+            #0b6285
+        );
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: white;
+
+    font-size: 28px;
+
+    font-weight: 900;
+
+    letter-spacing: 2px;
+
+    box-shadow:
+        0 12px 28px
+        rgba(6,43,63,.30);
+
+}
+
+
+.school-name {
+
+    color: #66727d;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+
+    margin-bottom: 8px;
+
+}
+
+
+.brand h1 {
+
+    color: #071c2c;
+
+    font-size: 28px;
+
+    font-weight: 800;
+
+    margin-bottom: 9px;
+
+}
+
+
+.jubilee {
+
+    display: inline-block;
+
+    color: #a47b16;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+
+}
+
+
+/* =========================================
+   DIVIDER
+========================================= */
+
+.divider {
+
+    height: 1px;
+
+    background:
+        #e8ecef;
+
+    margin:
+        0 0 28px;
+
+}
+
+
+/* =========================================
+   LOGIN TITLE
+========================================= */
+
+.login-title {
+
+    margin-bottom: 23px;
+
+}
+
+
+.login-title h2 {
+
+    color: #162532;
+
+    font-size: 21px;
+
+    margin-bottom: 6px;
+
+}
+
+
+.login-title p {
+
+    color: #84909a;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+
+}
+
+
+/* =========================================
+   FORM
+========================================= */
+
+.form-group {
+
+    margin-bottom: 19px;
+
+}
+
+
+.form-group label {
+
+    display: block;
+
+    color: #354553;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    margin-bottom: 8px;
+
+}
+
+
+.input-box {
+
+    position: relative;
+
+}
+
+
+.input-icon {
+
+    position: absolute;
+
+    left: 15px;
+
+    top: 50%;
+
+    transform:
+        translateY(-50%);
+
+    font-size: 17px;
+
+    opacity: .55;
+
+    pointer-events: none;
+
+}
+
+
+input {
+
+    width: 100%;
+
+    height: 54px;
+
+    padding:
+        0 15px 0 46px;
+
+    border:
+        1px solid
+        #dce2e7;
+
+    border-radius: 11px;
+
+    background: #f8fafb;
+
+    color: #1d2b36;
+
+    font-size: 15px;
+
+    outline: none;
+
+    transition:
+        .2s ease;
+
+}
+
+
+input:focus {
+
+    background: #fff;
+
+    border-color: #0a5b7b;
+
+    box-shadow:
+        0 0 0 4px
+        rgba(10,91,123,.09);
+
+}
+
+
+input::placeholder {
+
+    color: #a5adb5;
+
+}
+
+
+/* =========================================
+   LOGIN BUTTON
+========================================= */
+
+#loginBtn {
+
+    width: 100%;
+
+    height: 55px;
+
+    margin-top: 5px;
+
+    border: none;
+
+    border-radius: 11px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #062b3f,
+            #0a607f
+        );
+
+    color: white;
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 10px 24px
+        rgba(6,43,63,.25);
+
+    transition:
+        .2s ease;
+
+}
+
+
+#loginBtn:hover {
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 14px 30px
+        rgba(6,43,63,.30);
+
+}
+
+
+#loginBtn:active {
+
+    transform:
+        translateY(0);
+
+}
+
+
+#loginBtn:disabled {
+
+    opacity: .65;
+
+    cursor:
+        not-allowed;
+
+    transform:
+        none;
+
+}
+
+
+/* =========================================
+   MESSAGE
+========================================= */
+
+#message {
+
+    min-height: 23px;
+
+    text-align: center;
+
+    margin-top: 16px;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+
+}
+
+
+/* =========================================
+   SECURITY
+========================================= */
+
+.security {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 7px;
+
+    margin-top: 23px;
+
+    color: #8a959d;
+
+    font-size: 11px;
+
+}
+
+
+/* =========================================
+   FOOTER
+========================================= */
+
+.footer {
+
+    text-align: center;
+
+    border-top:
+        1px solid
+        #edf0f2;
+
+    margin-top: 24px;
+
+    padding-top: 18px;
+
+    color: #9aa3aa;
+
+    font-size: 11px;
+
+    line-height: 1.6;
+
+}
+
+
+.footer strong {
+
+    color: #52616e;
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 520px) {
+
+    body {
+
+        padding: 15px;
+
+    }
+
+
+    .login-card {
+
+        padding:
+            32px 23px 25px;
+
+        border-radius: 21px;
+
+    }
+
+
+    .logo {
+
+        width: 72px;
+
+        height: 72px;
+
+        font-size: 24px;
+
+        border-radius: 19px;
+
+    }
+
+
+    .brand h1 {
+
+        font-size: 23px;
+
+    }
+
+
+    .school-name {
+
+        font-size: 10px;
+
+        letter-spacing: 1.5px;
+
+    }
+
+
+    .login-title h2 {
+
+        font-size: 19px;
+
+    }
+
+}
+
+</style></head><body><div class="bg-shape shape-one"></div><div class="bg-shape shape-two"></div><div class="login-card"><!-- BRAND -->
+
+<div class="brand">
+
+
+    <div class="logo">
+        PHS
+    </div>
+
+
+    <div class="school-name">
+        Paharchanda High School
+    </div>
+
+
+    <h1>
+        Alumni Association
+    </h1>
+
+
+    <div class="jubilee">
+        DIAMOND JUBILEE • 2027
+    </div>
+
+
+</div>
+
+
+<div class="divider"></div>
+
+
+<!-- LOGIN -->
+
+<div class="login-title">
+
+    <h2>
+        Admin Portal
+    </h2>
+
+    <p>
+        Sign in securely to manage the
+        alumni administration dashboard.
+    </p>
+
+</div>
+
+
+<form id="loginForm">
+
+
+    <!-- EMAIL -->
+
+    <div class="form-group">
+
+        <label for="email">
+            Admin Email
+        </label>
+
+
+        <div class="input-box">
+
+            <span class="input-icon">
+                ✉
+            </span>
+
+
+            <input
+                type="email"
+                id="email"
+                placeholder="Enter your admin email"
+                autocomplete="email"
+                required
+            >
+
+        </div>
+
+    </div>
+
+
+    <!-- PASSWORD -->
+
+    <div class="form-group">
+
+        <label for="password">
+            Password
+        </label>
+
+
+        <div class="input-box">
+
+            <span class="input-icon">
+                🔒
+            </span>
+
+
+            <input
+                type="password"
+                id="password"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                required
+            >
+
+        </div>
+
+    </div>
+
+
+    <!-- BUTTON -->
+
+    <button
+        type="submit"
+        id="loginBtn"
+    >
+        Login to Admin Portal
+    </button>
+
+
+</form>
+
+
+<div id="message"></div>
+
+
+<div class="security">
+
+    🔐
+
+    Secure Administrator Access
+
+</div>
+
+
+<div class="footer">
+
+    Paharchanda High School Alumni Association
+
+    <br>
+
+    <strong>
+        Diamond Jubilee 2027
+    </strong>
+
+</div>
+
+</div><!-- SUPABASE --><script
+src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+</script><!-- LOGIN JAVASCRIPT --><script src="admin-login.js"></script></body></html>
