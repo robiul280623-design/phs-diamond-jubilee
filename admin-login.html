@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Admin Login | Paharchanda High School</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    min-height:100vh;
+    font-family:Inter,Arial,sans-serif;
+    background:
+        radial-gradient(circle at top left,#243b55,transparent 40%),
+        radial-gradient(circle at bottom right,#141e30,transparent 45%),
+        #0b1220;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    color:#fff;
+}
+
+.login-wrapper{
+    width:100%;
+    max-width:430px;
+}
+
+.brand{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.logo{
+    width:82px;
+    height:82px;
+    border-radius:50%;
+    object-fit:cover;
+    background:#fff;
+    padding:5px;
+    box-shadow:0 15px 40px rgba(0,0,0,.3);
+}
+
+.brand h1{
+    font-size:23px;
+    margin-top:15px;
+}
+
+.brand p{
+    color:#b9c3d4;
+    margin-top:6px;
+    font-size:14px;
+}
+
+.login-card{
+    background:rgba(255,255,255,.09);
+    border:1px solid rgba(255,255,255,.15);
+    backdrop-filter:blur(20px);
+    border-radius:22px;
+    padding:30px;
+    box-shadow:0 25px 70px rgba(0,0,0,.35);
+}
+
+.login-card h2{
+    font-size:22px;
+    margin-bottom:7px;
+}
+
+.subtitle{
+    color:#aeb8c8;
+    font-size:13px;
+    margin-bottom:25px;
+}
+
+.field{
+    margin-bottom:18px;
+}
+
+.field label{
+    display:block;
+    font-size:13px;
+    margin-bottom:8px;
+    color:#d9dfeb;
+}
+
+.field input{
+    width:100%;
+    height:48px;
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:12px;
+    background:rgba(0,0,0,.2);
+    color:#fff;
+    padding:0 14px;
+    outline:none;
+    font-size:14px;
+}
+
+.field input:focus{
+    border-color:#6ea8fe;
+    box-shadow:0 0 0 3px rgba(110,168,254,.12);
+}
+
+.password-box{
+    position:relative;
+}
+
+.password-box input{
+    padding-right:55px;
+}
+
+.show-password{
+    position:absolute;
+    right:0;
+    top:0;
+    width:50px;
+    height:48px;
+    border:0;
+    background:transparent;
+    color:#b8c2d3;
+    cursor:pointer;
+}
+
+.login-btn{
+    width:100%;
+    height:50px;
+    border:0;
+    border-radius:12px;
+    background:linear-gradient(135deg,#2563eb,#7c3aed);
+    color:#fff;
+    font-weight:700;
+    font-size:15px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.login-btn:hover{
+    transform:translateY(-1px);
+    box-shadow:0 12px 30px rgba(37,99,235,.3);
+}
+
+.login-btn:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+    transform:none;
+}
+
+.message{
+    display:none;
+    padding:12px;
+    border-radius:10px;
+    margin-bottom:18px;
+    font-size:13px;
+}
+
+.message.error{
+    display:block;
+    background:rgba(239,68,68,.12);
+    border:1px solid rgba(239,68,68,.3);
+    color:#fecaca;
+}
+
+.message.success{
+    display:block;
+    background:rgba(34,197,94,.12);
+    border:1px solid rgba(34,197,94,.3);
+    color:#bbf7d0;
+}
+
+.security{
+    text-align:center;
+    margin-top:20px;
+    color:#7f8da3;
+    font-size:11px;
+}
+
+@media(max-width:480px){
+    .login-card{
+        padding:23px;
+    }
+
+    .brand h1{
+        font-size:20px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="login-wrapper">
+
+    <div class="brand">
+
+        <!-- চাইলে এখানে আপনার আসল logo বসাবেন -->
+        <div style="
+            width:82px;
+            height:82px;
+            margin:auto;
+            border-radius:50%;
+            background:#fff;
+            color:#172033;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-weight:800;
+            font-size:25px;
+        ">
+            PHS
+        </div>
+
+        <h1>PAHARCHANDA HIGH SCHOOL ALUMNI ASSOCIATION </h1>
+
+        <p>Diamond Jubilee 2027 • Administration</p>
+
+    </div>
+
+    <div class="login-card">
+
+        <h2>Admin Login</h2>
+
+        <p class="subtitle">
+            Sign in to access the Reunion Management Dashboard.
+        </p>
+
+        <div id="message" class="message"></div>
+
+        <form id="loginForm">
+
+            <div class="field">
+                <label for="email">Admin Email</label>
+
+                <input
+                    type="email"
+                    id="email"
+                    autocomplete="username"
+                    placeholder="Enter admin email"
+                    required
+                >
+            </div>
+
+            <div class="field">
+
+                <label for="password">Password</label>
+
+                <div class="password-box">
+
+                    <input
+                        type="password"
+                        id="password"
+                        autocomplete="current-password"
+                        placeholder="Enter password"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="show-password"
+                        id="showPassword"
+                    >
+                        👁
+                    </button>
+
+                </div>
+
+            </div>
+
+            <button
+                type="submit"
+                class="login-btn"
+                id="loginBtn"
+            >
+                Sign In
+            </button>
+
+        </form>
+
+        <div class="security">
+            Authorized administrators only
+        </div>
+
+    </div>
+
+</div>
+
+<script src="admin-login.js"></script>
+
+</body>
+</html>

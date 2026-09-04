@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Attendance Management</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f3f6fa;
+    color:#17233c;
+}
+
+.header{
+    background:#082d63;
+    color:white;
+    padding:16px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.header h1{
+    margin:0;
+    font-size:22px;
+}
+
+.back-btn,
+.logout-btn{
+    border:0;
+    color:white;
+    padding:9px 15px;
+    border-radius:7px;
+    cursor:pointer;
+}
+
+.back-btn{
+    background:#168447;
+}
+
+.logout-btn{
+    background:#dc3545;
+}
+
+.container{
+    width:95%;
+    max-width:1400px;
+    margin:22px auto;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:15px;
+
+    margin-bottom:20px;
+}
+
+.stat-card{
+    background:white;
+    border-radius:12px;
+    padding:20px;
+    box-shadow:
+        0 3px 15px
+        rgba(0,0,0,.08);
+
+    text-align:center;
+}
+
+.stat-card h3{
+    margin:0;
+    color:#666;
+    font-size:15px;
+}
+
+.stat-card strong{
+    display:block;
+    margin-top:10px;
+    color:#082d63;
+    font-size:30px;
+}
+
+.search-card,
+.table-card{
+    background:white;
+    border-radius:12px;
+    padding:20px;
+    box-shadow:
+        0 3px 15px
+        rgba(0,0,0,.08);
+
+    margin-bottom:20px;
+}
+
+#search{
+    width:100%;
+    padding:13px;
+    border:1px solid #ccd4df;
+    border-radius:8px;
+    font-size:16px;
+}
+
+.message{
+    margin-top:10px;
+    color:#666;
+}
+
+.table-wrapper{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    min-width:850px;
+    border-collapse:collapse;
+}
+
+th{
+    background:#082d63;
+    color:white;
+    padding:13px;
+    text-align:left;
+}
+
+td{
+    padding:11px;
+    border-bottom:
+        1px solid #e5e8ed;
+}
+
+.present{
+    color:#168447;
+    font-weight:bold;
+}
+
+.cancelled{
+    color:#dc3545;
+    font-weight:bold;
+}
+
+.delete-btn{
+    border:0;
+    background:#dc3545;
+    color:white;
+    padding:7px 11px;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.empty{
+    text-align:center;
+    padding:25px;
+    color:#777;
+}
+
+@media(max-width:700px){
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .header{
+        flex-direction:column;
+        gap:10px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<header class="header">
+
+    <h1>
+        📊 Attendance Management
+    </h1>
+
+    <div>
+
+        <button
+            class="back-btn"
+            id="backBtn"
+        >
+            ← Admin Panel
+        </button>
+
+        <button
+            class="logout-btn"
+            id="logoutBtn"
+        >
+            Logout
+        </button>
+
+    </div>
+
+</header>
+
+
+<div class="container">
+
+
+    <!-- =========================
+         STATISTICS
+    ========================== -->
+
+    <div class="stats">
+
+        <div class="stat-card">
+
+            <h3>
+                Total Registered
+            </h3>
+
+            <strong id="totalRegistered">
+                0
+            </strong>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <h3>
+                Total Present
+            </h3>
+
+            <strong id="totalPresent">
+                0
+            </strong>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <h3>
+                Not Checked In
+            </h3>
+
+            <strong id="notPresent">
+                0
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         SEARCH
+    ========================== -->
+
+    <div class="search-card">
+
+        <input
+            type="text"
+            id="search"
+            placeholder="Search by Name, SSC Batch, Registration No or Phone..."
+        >
+
+        <div
+            id="message"
+            class="message"
+        >
+            Loading...
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         TABLE
+    ========================== -->
+
+    <div class="table-card">
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Name</th>
+
+                        <th>SSC Batch</th>
+
+                        <th>Registration No</th>
+
+                        <th>Phone</th>
+
+                        <th>Event</th>
+
+                        <th>Check-in Time</th>
+
+                        <th>Status</th>
+
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody
+                    id="attendanceTable"
+                ></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="attendance.js"></script>
+
+</body>
+
+</html>
