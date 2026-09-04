@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+<title>
+    Alumni Registration | Paharchanda High School
+</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+html,
+body{
+    margin:0;
+    padding:0;
+    min-height:100%;
+}
+
+body{
+    font-family:Arial,sans-serif;
+    background:#f2f6fb;
+    color:#17233c;
+}
+
+/* HEADER */
+
+.header{
+    background:#082d63;
+    color:#fff;
+    text-align:center;
+    padding:22px 15px;
+}
+
+.header h1{
+    margin:0;
+    font-size:28px;
+}
+
+.header p{
+    margin:8px 0 0;
+    font-size:15px;
+}
+
+/* CONTAINER */
+
+.container{
+    width:94%;
+    max-width:850px;
+    margin:25px auto 40px;
+}
+
+.card{
+    background:#fff;
+    padding:25px;
+    border-radius:14px;
+    box-shadow:0 4px 18px rgba(0,0,0,.08);
+}
+
+/* SECTION */
+
+.section-title{
+    background:#082d63;
+    color:#fff;
+    padding:11px 14px;
+    border-radius:7px;
+    margin:25px 0 18px;
+    font-size:18px;
+    font-weight:bold;
+}
+
+.section-title:first-child{
+    margin-top:0;
+}
+
+/* FORM */
+
+.form-group{
+    margin-bottom:16px;
+}
+
+label{
+    display:block;
+    font-weight:bold;
+    margin-bottom:7px;
+}
+
+.required{
+    color:#e53935;
+}
+
+input,
+select,
+textarea{
+    width:100%;
+    padding:12px;
+    border:1px solid #ccd4df;
+    border-radius:7px;
+    font-size:15px;
+    outline:none;
+    background:#fff;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+    border-color:#0969c8;
+}
+
+textarea{
+    min-height:90px;
+    resize:vertical;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+}
+
+/* PHOTO */
+
+.photo-box{
+    border:2px dashed #b8c4d4;
+    padding:18px;
+    border-radius:10px;
+    background:#f8fafc;
+    text-align:center;
+}
+
+.photo-box label{
+    text-align:center;
+}
+
+.photo-note{
+    color:#666;
+    font-size:13px;
+    margin-top:8px;
+    line-height:1.6;
+}
+
+#photoPreview{
+    width:150px;
+    height:180px;
+    margin:16px auto 5px;
+    border:2px solid #082d63;
+    border-radius:8px;
+    background:#fff;
+    background-position:center;
+    background-size:cover;
+    background-repeat:no-repeat;
+    display:none;
+}
+
+/* PAYMENT */
+
+.payment-box{
+    background:#f7f9fc;
+    border:1px solid #dce2ea;
+    border-radius:10px;
+    padding:18px;
+}
+
+.payment-number-box{
+    background:#fff8e1;
+    border:2px solid #e0b52c;
+    border-radius:9px;
+    padding:15px;
+    margin-bottom:18px;
+    text-align:center;
+}
+
+.payment-number-title{
+    font-weight:bold;
+    color:#082d63;
+    margin-bottom:8px;
+}
+
+.payment-number{
+    font-size:23px;
+    font-weight:bold;
+    color:#168447;
+    letter-spacing:1px;
+}
+
+.payment-personal{
+    margin-top:7px;
+    color:#555;
+    font-size:13px;
+}
+
+.payment-instruction{
+    background:#eef5ff;
+    border-left:4px solid #0969c8;
+    padding:12px;
+    margin-bottom:18px;
+    line-height:1.6;
+    font-size:14px;
+}
+
+/* AUTO FEE */
+
+.fee-box{
+    background:#e9f8ef;
+    border:2px solid #71bf91;
+    border-radius:9px;
+    padding:15px;
+    margin-bottom:18px;
+}
+
+.fee-title{
+    color:#082d63;
+    font-weight:bold;
+    margin-bottom:7px;
+}
+
+.fee-amount{
+    font-size:25px;
+    font-weight:bold;
+    color:#168447;
+}
+
+.fee-note{
+    font-size:13px;
+    color:#555;
+    margin-top:6px;
+}
+
+/* T-SHIRT */
+
+.tshirt-box{
+    background:#f7f9fc;
+    border:1px solid #dce2ea;
+    border-radius:10px;
+    padding:18px;
+    margin-top:10px;
+}
+
+.tshirt-person{
+    background:#fff;
+    border:1px solid #dce2ea;
+    border-radius:8px;
+    padding:12px;
+    margin-bottom:12px;
+}
+
+.tshirt-person-title{
+    font-weight:bold;
+    color:#082d63;
+    margin-bottom:8px;
+}
+
+.child-title{
+    font-weight:bold;
+    color:#555;
+    margin:12px 0 8px;
+}
+
+/* CHECKBOX */
+
+.checkbox-row{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    margin:15px 0;
+}
+
+.checkbox-row input{
+    width:20px;
+    height:20px;
+    margin-top:2px;
+    flex-shrink:0;
+}
+
+.checkbox-row label{
+    margin:0;
+    font-weight:normal;
+    line-height:1.5;
+}
+
+/* SUBMIT */
+
+.submit-area{
+    margin-top:30px;
+    padding-top:10px;
+    width:100%;
+}
+
+#submitBtn{
+    display:block;
+    width:100%;
+    min-height:54px;
+    border:0;
+    outline:none;
+    background:#168447;
+    color:white;
+    padding:15px;
+    border-radius:8px;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+#submitBtn:hover{
+    background:#126b39;
+}
+
+#submitBtn:disabled{
+    background:#8a9aa8;
+    cursor:not-allowed;
+}
+
+/* MESSAGE */
+
+#message{
+    margin-top:20px;
+    width:100%;
+}
+
+/* SUCCESS */
+
+.success-box{
+    background:#e8f7ee;
+    border:2px solid #71bf91;
+    color:#145c32;
+    padding:24px;
+    border-radius:10px;
+    text-align:center;
+}
+
+.success-title{
+    font-size:22px;
+    font-weight:bold;
+    margin-bottom:15px;
+}
+
+.member-id-label{
+    font-size:15px;
+    margin-top:10px;
+}
+
+.member-id{
+    display:block;
+    margin:10px 0;
+    padding:13px;
+    background:#fff;
+    border:2px dashed #168447;
+    border-radius:8px;
+    font-size:28px;
+    font-weight:bold;
+    color:#082d63;
+    letter-spacing:1px;
+    word-break:break-word;
+}
+
+.success-photo{
+    width:120px;
+    height:145px;
+    object-fit:cover;
+    border-radius:8px;
+    border:2px solid #082d63;
+    margin-top:15px;
+}
+
+.error-box{
+    background:#fdecec;
+    border:2px solid #e5a4a4;
+    color:#9d1c1c;
+    padding:18px;
+    border-radius:9px;
+    line-height:1.6;
+}
+
+.process-box{
+    background:#eef5ff;
+    border:1px solid #b8d3f0;
+    color:#164b7a;
+    padding:15px;
+    border-radius:8px;
+    text-align:center;
+    font-weight:bold;
+}
+
+/* HIDDEN */
+
+.hidden{
+    display:none !important;
+}
+
+/* FOOTER */
+
+.footer{
+    text-align:center;
+    padding:25px;
+    color:#666;
+    font-size:13px;
+}
+
+/* MOBILE */
+
+@media(max-width:650px){
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+    .card{
+        padding:17px;
+    }
+
+    .header h1{
+        font-size:23px;
+    }
+
+    .payment-number{
+        font-size:20px;
+    }
+
+    .member-id{
+        font-size:23px;
+    }
+
+}
+
+/* PRINT */
+
+@media print{
+
+    body{
+        background:#fff;
+    }
+
+    .header,
+    .footer,
+    #submitBtn{
+        display:none !important;
+    }
+
+    .container{
+        width:100%;
+        margin:0;
+    }
+
+    .card{
+        box-shadow:none;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header class="header">
+
+    <h1>
+        PAHARCHANDA HIGH SCHOOL
+    </h1>
+
+    <p>
+        Alumni Registration • Diamond Jubilee 2027
+    </p>
+
+</header>
+
+
+<div class="container">
+
+<div class="card">
+
+<form id="registrationForm">
+
+
+<!-- PERSONAL INFORMATION -->
+
+<div class="section-title">
+    Personal Information
+</div>
+
+
+<div class="form-group">
+
+<label for="name">
+    Full Name
+    <span class="required">*</span>
+</label>
+
+<input
+    type="text"
+    id="name"
+    name="name"
+    required
+    autocomplete="name"
+    placeholder="Enter your full name">
+
+</div>
+
+
+<div class="grid">
+
+<div class="form-group">
+
+<label for="father_name">
+    Father's Name
+    <span class="required">*</span>
+</label>
+
+<input
+    type="text"
+    id="father_name"
+    name="father_name"
+    required
+    placeholder="Father's name">
+
+</div>
+
+
+<div class="form-group">
+
+<label for="mother_name">
+    Mother's Name
+    <span class="required">*</span>
+</label>
+
+<input
+    type="text"
+    id="mother_name"
+    name="mother_name"
+    required
+    placeholder="Mother's name">
+
+</div>
+
+</div>
+
+
+<!-- MEMBER TYPE -->
+
+<div class="section-title">
+    Membership Information
+</div>
+
+
+<div class="grid">
+
+
+<div class="form-group">
+
+<label for="member_type">
+
+    Member Type
+    <span class="required">*</span>
+
+</label>
+
+<select
+    id="member_type"
+    name="member_type"
+    required>
+
+<option value="">
+    Select Member Type
+</option>
+
+<option value="EX-STUDENT">
+    EX-STUDENT
+</option>
+
+<option value="COUPLE">
+    COUPLE
+</option>
+
+<option value="CURRENT STUDENT">
+    CURRENT STUDENT
+</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label for="category">
+
+    Registration Category
+    <span class="required">*</span>
+
+</label>
+
+<select
+    id="category"
+    name="category"
+    required>
+
+<option value="">
+    Select Category
+</option>
+
+<option value="EX_1986_2023">
+    SSC 1986 – 2023
+</option>
+
+<option value="EX_2024_2026">
+    SSC 2024 – 2026
+</option>
+
+<option value="CLASS_6_7">
+    Class 6th – 7th
+</option>
+
+<option value="CLASS_8">
+    Class 8th
+</option>
+
+<option value="CLASS_9_10">
+    Class 9th – 10th
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+
+<!-- CURRENT STUDENT -->
+
+<div
+    id="currentStudentBox"
+    class="form-group hidden">
+
+<label for="current_class">
+
+    Current Class
+
+</label>
+
+<select
+    id="current_class">
+
+<option value="">
+    Select Class
+</option>
+
+<option value="6th">
+    6th
+</option>
+
+<option value="7th">
+    7th
+</option>
+
+<option value="8th">
+    8th
+</option>
+
+<option value="9th">
+    9th
+</option>
+
+<option value="10th">
+    10th
+</option>
+
+</select>
+
+</div>
+
+
+<!-- COUPLE -->
+
+<div
+    id="coupleBox"
+    class="tshirt-box hidden">
+
+
+<div class="form-group">
+
+<label for="wife_name">
+
+    Spouse Name
+    <span class="required">*</span>
+
+</label>
+
+<input
+    type="text"
+    id="wife_name"
+    placeholder="Enter wife's name">
+
+</div>
+
+
+<div class="form-group">
+
+<label for="children_count">
+
+    Number of Children
+    <span class="required">*</span>
+
+</label>
+
+<select
+    id="children_count">
+
+<option value="0">
+    No Child
+</option>
+
+<option value="1">
+    1 Child
+</option>
+
+<option value="2">
+    2 Children
+</option>
+
+<option value="3">
+    3 Children
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+
+<div class="grid">
+
+<div class="form-group">
+
+<label for="ssc_year">
+
+    SSC Batch / Year
+    <span class="required">*</span>
+
+</label>
+
+<input
+    type="number"
+    id="ssc_year"
+    name="ssc_year"
+    required
+    min="1965"
+    max="2030"
+    placeholder="Example: 2018">
+
+</div>
+
+
+<div class="form-group">
+
+<label for="blood_group">
+    Blood Group
+</label>
+
+<select
+    id="blood_group"
+    name="blood_group">
+
+<option value="">
+    Select Blood Group
+</option>
+
+<option value="A+">A+</option>
+<option value="A-">A-</option>
+<option value="B+">B+</option>
+<option value="B-">B-</option>
+<option value="AB+">AB+</option>
+<option value="AB-">AB-</option>
+<option value="O+">O+</option>
+<option value="O-">O-</option>
+
+</select>
+
+</div>
+
+</div>
+
+
+<!-- T SHIRT -->
+
+<div class="form-group">
+
+<label>
+    T-Shirt Size
+    <span class="required">*</span>
+</label>
+
+
+<div
+    id="tshirtContainer"
+    class="tshirt-box">
+
+
+<div class="tshirt-person">
+
+<div class="tshirt-person-title">
+    Member T-Shirt Size
+</div>
+
+<select id="member_tshirt_size">
+
+<option value="">
+    Select Size
+</option>
+
+<option value="S">S</option>
+<option value="M">M</option>
+<option value="L">L</option>
+<option value="XL">XL</option>
+<option value="XXL">XXL</option>
+<option value="XXXL">XXXL</option>
+
+</select>
+
+</div>
+
+
+<div
+    id="coupleTshirtArea"
+    class="hidden">
+
+
+<div class="tshirt-person">
+
+<div class="tshirt-person-title">
+    Husband T-Shirt Size
+</div>
+
+<select id="husband_tshirt_size">
+
+<option value="">
+    Select Size
+</option>
+
+<option value="S">S</option>
+<option value="M">M</option>
+<option value="L">L</option>
+<option value="XL">XL</option>
+<option value="XXL">XXL</option>
+<option value="XXXL">XXXL</option>
+
+</select>
+
+</div>
+
+
+<div class="tshirt-person">
+
+<div class="tshirt-person-title">
+    Wife T-Shirt Size
+</div>
+
+<select id="wife_tshirt_size">
+
+<option value="">
+    Select Size
+</option>
+
+<option value="S">S</option>
+<option value="M">M</option>
+<option value="L">L</option>
+<option value="XL">XL</option>
+<option value="XXL">XXL</option>
+<option value="XXXL">XXXL</option>
+
+</select>
+
+</div>
+
+
+<div id="childrenTshirtArea"></div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- EDUCATION -->
+
+<div class="section-title">
+    Education & Profession
+</div>
+
+
+<div class="form-group">
+
+<label for="education">
+    Educational Qualification
+</label>
+
+<input
+    type="text"
+    id="education"
+    name="education"
+    placeholder="Example: B.A / B.Sc / M.A / MBA">
+
+</div>
+
+
+<div class="form-group">
+
+<label for="profession">
+    Profession
+</label>
+
+<input
+    type="text"
+    id="profession"
+    name="profession"
+    placeholder="Your current profession">
+
+</div>
+
+
+<!-- CONTACT -->
+
+<div class="section-title">
+    Contact Information
+</div>
+
+
+<div class="grid">
+
+<div class="form-group">
+
+<label for="phone">
+    Mobile Number
+    <span class="required">*</span>
+</label>
+
+<input
+    type="tel"
+    id="phone"
+    name="phone"
+    required
+    autocomplete="tel"
+    placeholder="01XXXXXXXXX">
+
+</div>
+
+
+<div class="form-group">
+
+<label for="email">
+    Email
+</label>
+
+<input
+    type="email"
+    id="email"
+    name="email"
+    autocomplete="email"
+    placeholder="example@email.com">
+
+</div>
+
+</div>
+
+
+<div class="form-group">
+
+<label for="address">
+    Address
+</label>
+
+<textarea
+    id="address"
+    name="address"
+    placeholder="Enter your present address"></textarea>
+
+</div>
+
+
+<!-- PHOTO -->
+
+<div class="section-title">
+    Profile Photo
+</div>
+
+
+<div class="photo-box">
+
+<label for="photo">
+
+    Upload Your Photo
+    <span class="required">*</span>
+
+</label>
+
+
+<input
+    type="file"
+    id="photo"
+    name="photo"
+    accept="image/jpeg,image/png,image/webp"
+    required>
+
+
+<div class="photo-note">
+
+JPG / JPEG / PNG / WEBP only
+
+<br>
+
+Maximum original size: 10 MB
+
+<br>
+
+Photo will automatically be compressed to 150 KB or less.
+
+</div>
+
+
+<div id="photoPreview"></div>
+
+</div>
+
+
+<!-- PAYMENT -->
+
+<div class="section-title">
+    Registration Payment
+</div>
+
+
+<div class="payment-box">
+
+
+<div class="payment-number-box">
+
+<div class="payment-number-title">
+
+Payment Number
+<br>
+
+<strong>
+  bKash • Nagad • Rocket
+</strong>
+
+</div>
+
+
+<div class="payment-number">
+  (01643431919 - Bkash.  Nagad)
+  (01850917325 - (BKash. Nagad. Rocket)
+</div>
+
+
+<div class="payment-personal">
+Personal Number
+</div>
+
+</div>
+
+
+<div class="payment-instruction">
+
+<strong>
+Payment Instruction:
+</strong>
+
+<br>
+
+উপরের নম্বরে Registration Fee
+bKash, Nagad অথবা Rocket-এর মাধ্যমে
+<strong>Send Money</strong> করুন।
+
+<br><br>
+
+পেমেন্ট সম্পন্ন করার পর নিচে
+Payment Method এবং Transaction ID প্রদান করুন।
+
+</div>
+
+
+<!-- AUTO FEE -->
+
+<div class="fee-box">
+
+<div class="fee-title">
+    Registration Fee
+</div>
+
+<div
+    id="feeAmount"
+    class="fee-amount">
+
+    ৳0
+
+</div>
+
+<div
+    id="feeNote"
+    class="fee-note">
+
+    সদস্য ধরণ ও ক্যাটাগরি নির্বাচন করলে
+    নির্ধারিত ফি এখানে অটোমেটিক দেখাবে।
+
+</div>
+
+</div>
+
+
+<div class="form-group">
+
+<label for="payment_method">
+
+Payment Method
+<span class="required">*</span>
+
+</label>
+
+
+<select
+    id="payment_method"
+    name="payment_method"
+    required>
+
+<option value="">
+Select Payment Method
+</option>
+
+<option value="bKash">
+bKash
+</option>
+
+<option value="Nagad">
+Nagad
+</option>
+
+<option value="Rocket">
+Rocket
+</option>
+
+<!-- ONLY ADDED -->
+
+<option value="Cash">
+Cash
+</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label for="payment_amount">
+
+Payment Amount
+<span class="required">*</span>
+
+</label>
+
+
+<input
+    type="number"
+    id="payment_amount"
+    name="payment_amount"
+    readonly
+    required
+    min="0"
+    step="1"
+    placeholder="Automatic">
+
+</div>
+
+
+<div
+    id="transactionBox"
+    class="form-group">
+
+<label for="transaction_id">
+
+Transaction ID
+<span class="required">*</span>
+
+</label>
+
+
+<input
+    type="text"
+    id="transaction_id"
+    name="transaction_id"
+    required
+    placeholder="Enter Transaction ID">
+
+</div>
+
+
+<!-- ONLY ADDED -->
+
+<div
+    id="cashReceiverBox"
+    class="form-group hidden">
+
+<label for="cash_receiver">
+
+Cash Receiver
+<span class="required">*</span>
+
+</label>
+
+<input
+    type="text"
+    id="cash_receiver"
+    name="cash_receiver"
+    placeholder="Enter Cash Receiver Name">
+
+</div>
+
+
+<div class="checkbox-row">
+
+<input
+    type="checkbox"
+    id="payment_confirmed"
+    name="payment_confirmed"
+    required>
+
+
+<label for="payment_confirmed">
+
+I confirm that I have completed the payment
+and the information provided above is correct.
+
+<span class="required">*</span>
+
+</label>
+
+</div>
+
+
+</div>
+
+
+<!-- SUBMIT -->
+
+<div class="submit-area">
+
+<button
+    type="submit"
+    id="submitBtn">
+
+Submit Registration
+
+</button>
+
+</div>
+
+
+<div id="message"></div>
+
+
+</form>
+
+</div>
+
+</div>
+
+
+<footer class="footer">
+
+Paharchanda High School Alumni Association
+
+<br>
+
+Diamond Jubilee 2027
+  Organised By Paharchanda High School Alumni Association. 
+
+</footer>
+
+
+<script src="./registered.js"></script>
+
+</body>
+
+</html>
