@@ -1,0 +1,2392 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+    Paharchanda High School Alumni Association | Admin Dashboard
+</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+html,
+body{
+    margin:0;
+    padding:0;
+    font-family:
+        Inter,
+        Arial,
+        Helvetica,
+        sans-serif;
+    background:#f1f5f9;
+    color:#0f172a;
+}
+
+button,
+input,
+select,
+textarea{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+#loginScreen{
+
+    min-height:100vh;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0f172a,
+            #1e3a8a
+        );
+
+}
+
+.login-box{
+
+    width:100%;
+
+    max-width:420px;
+
+    background:#fff;
+
+    border-radius:24px;
+
+    padding:35px;
+
+    box-shadow:
+        0 25px 70px
+        rgba(0,0,0,.25);
+
+}
+
+.login-logo{
+
+    width:80px;
+
+    height:80px;
+
+    margin:0 auto 18px;
+
+    border-radius:20px;
+
+    background:#1e3a8a;
+
+    color:#fff;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:32px;
+
+    font-weight:900;
+
+}
+
+.login-box h1{
+
+    text-align:center;
+
+    margin:0;
+
+    font-size:24px;
+
+}
+
+.login-box p{
+
+    text-align:center;
+
+    color:#64748b;
+
+    margin:8px 0 25px;
+
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.form-group{
+    margin-bottom:16px;
+}
+
+.form-group label{
+
+    display:block;
+
+    margin-bottom:7px;
+
+    font-weight:700;
+
+    font-size:14px;
+
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+
+    width:100%;
+
+    border:1px solid #cbd5e1;
+
+    border-radius:10px;
+
+    padding:11px 13px;
+
+    outline:none;
+
+    background:#fff;
+
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus{
+
+    border-color:#2563eb;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(37,99,235,.12);
+
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.btn{
+
+    border:0;
+
+    border-radius:9px;
+
+    padding:10px 15px;
+
+    font-weight:700;
+
+    color:#fff;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:6px;
+
+}
+
+.btn-primary{
+    background:#2563eb;
+}
+
+.btn-success{
+    background:#16a34a;
+}
+
+.btn-danger{
+    background:#dc2626;
+}
+
+.btn-warning{
+    background:#d97706;
+}
+
+.btn-secondary{
+    background:#475569;
+}
+
+.btn-dark{
+    background:#0f172a;
+}
+
+.btn-small{
+
+    padding:7px 10px;
+
+    font-size:12px;
+
+}
+
+.btn:hover{
+    opacity:.9;
+}
+
+
+/* =========================================================
+   ADMIN APP
+========================================================= */
+
+#adminApp{
+    display:none;
+}
+
+.admin-layout{
+
+    min-height:100vh;
+
+    display:flex;
+
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar{
+
+    width:260px;
+
+    background:#0f172a;
+
+    color:#fff;
+
+    position:fixed;
+
+    left:0;
+
+    top:0;
+
+    bottom:0;
+
+    overflow-y:auto;
+
+    z-index:1000;
+
+}
+
+.sidebar-header{
+
+    padding:24px 18px;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.1);
+
+}
+
+.sidebar-header h2{
+
+    font-size:17px;
+
+    margin:0;
+
+}
+
+.sidebar-header p{
+
+    margin:5px 0 0;
+
+    font-size:12px;
+
+    color:#94a3b8;
+
+}
+
+.nav{
+    padding:14px;
+}
+
+.nav button{
+
+    width:100%;
+
+    border:0;
+
+    background:transparent;
+
+    color:#cbd5e1;
+
+    padding:12px 13px;
+
+    margin-bottom:5px;
+
+    border-radius:9px;
+
+    text-align:left;
+
+    font-weight:600;
+
+}
+
+.nav button:hover,
+.nav button.active{
+
+    background:#1d4ed8;
+
+    color:#fff;
+
+}
+
+.logout-btn{
+
+    margin-top:20px !important;
+
+    background:#991b1b !important;
+
+    color:#fff !important;
+
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main{
+
+    margin-left:260px;
+
+    width:calc(100% - 260px);
+
+    min-height:100vh;
+
+}
+
+.topbar{
+
+    background:#fff;
+
+    padding:15px 22px;
+
+    border-bottom:
+        1px solid #e2e8f0;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    position:sticky;
+
+    top:0;
+
+    z-index:100;
+
+}
+
+.topbar h1{
+
+    margin:0;
+
+    font-size:21px;
+
+}
+
+.mobile-menu{
+
+    display:none;
+
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.content{
+    padding:22px;
+}
+
+.section{
+    display:none;
+}
+
+.section.active{
+    display:block;
+}
+
+.section-title{
+    margin-bottom:18px;
+}
+
+.section-title h2{
+    margin:0;
+    font-size:24px;
+}
+
+.section-title p{
+
+    margin:5px 0;
+
+    color:#64748b;
+
+}
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.stats-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap:16px;
+
+    margin-bottom:22px;
+
+}
+
+.stat-card{
+
+    background:#fff;
+
+    border-radius:16px;
+
+    padding:20px;
+
+    border:
+        1px solid #e2e8f0;
+
+}
+
+.stat-label{
+
+    color:#64748b;
+
+    font-size:13px;
+
+    font-weight:700;
+
+}
+
+.stat-value{
+
+    font-size:30px;
+
+    font-weight:900;
+
+    margin-top:7px;
+
+}
+
+
+/* =========================================================
+   LIVE ANALYTICS
+========================================================= */
+
+.live-header{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:12px;
+
+    flex-wrap:wrap;
+
+    margin-bottom:15px;
+
+}
+
+.live-title{
+
+    margin:0;
+
+    font-size:19px;
+
+}
+
+.live-badge{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:7px;
+
+    padding:6px 10px;
+
+    border-radius:20px;
+
+    background:#dcfce7;
+
+    color:#166534;
+
+    font-size:11px;
+
+    font-weight:900;
+
+}
+
+.live-dot{
+
+    width:8px;
+
+    height:8px;
+
+    border-radius:50%;
+
+    background:#16a34a;
+
+    box-shadow:
+        0 0 0 4px
+        rgba(22,163,74,.12);
+
+}
+
+.analytics-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap:14px;
+
+}
+
+.analytics-card{
+
+    background:#fff;
+
+    border:
+        1px solid #e2e8f0;
+
+    border-radius:14px;
+
+    padding:17px;
+
+}
+
+.analytics-card-label{
+
+    font-size:12px;
+
+    color:#64748b;
+
+    font-weight:800;
+
+}
+
+.analytics-card-value{
+
+    margin-top:6px;
+
+    font-size:24px;
+
+    font-weight:900;
+
+}
+
+.analytics-card-note{
+
+    margin-top:5px;
+
+    font-size:11px;
+
+    color:#94a3b8;
+
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.card{
+
+    background:#fff;
+
+    border-radius:16px;
+
+    padding:20px;
+
+    border:
+        1px solid #e2e8f0;
+
+    margin-bottom:20px;
+
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    min-width:800px;
+
+}
+
+th,
+td{
+
+    padding:11px;
+
+    border-bottom:
+        1px solid #e2e8f0;
+
+    text-align:left;
+
+    font-size:13px;
+
+}
+
+th{
+
+    background:#f8fafc;
+
+    font-weight:800;
+
+}
+
+
+/* =========================================================
+   ANALYTICS TABLE
+========================================================= */
+
+.analytics-table{
+
+    min-width:700px;
+
+}
+
+.analytics-table th{
+
+    position:sticky;
+
+    top:0;
+
+}
+
+.amount{
+
+    font-weight:900;
+
+}
+
+.amount-approved{
+    color:#15803d;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.status{
+
+    display:inline-block;
+
+    padding:5px 9px;
+
+    border-radius:20px;
+
+    font-size:11px;
+
+    font-weight:800;
+
+}
+
+.status-pending{
+
+    background:#fef3c7;
+
+    color:#92400e;
+
+}
+
+.status-approved{
+
+    background:#dcfce7;
+
+    color:#166534;
+
+}
+
+.status-rejected{
+
+    background:#fee2e2;
+
+    color:#991b1b;
+
+}
+
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.toolbar{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:10px;
+
+    margin-bottom:16px;
+
+}
+
+.search-input{
+
+    flex:1;
+
+    min-width:220px;
+
+    padding:10px 13px;
+
+    border:1px solid #cbd5e1;
+
+    border-radius:9px;
+
+}
+
+
+/* =========================================================
+   MAGAZINE
+========================================================= */
+
+.magazine-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:18px;
+
+}
+
+.magazine-card{
+
+    background:#fff;
+
+    border:
+        1px solid #e2e8f0;
+
+    border-radius:16px;
+
+    overflow:hidden;
+
+}
+
+.magazine-card-body{
+    padding:16px;
+}
+
+.magazine-title{
+
+    font-size:17px;
+
+    font-weight:800;
+
+    margin-bottom:7px;
+
+}
+
+.magazine-meta{
+
+    color:#64748b;
+
+    font-size:12px;
+
+    margin-bottom:10px;
+
+}
+
+.magazine-content{
+
+    color:#475569;
+
+    line-height:1.6;
+
+    max-height:130px;
+
+    overflow:hidden;
+
+}
+
+.magazine-actions{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:7px;
+
+    margin-top:14px;
+
+}
+
+
+/* =========================================================
+   GALLERY
+========================================================= */
+
+.gallery-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:18px;
+
+}
+
+.gallery-card{
+
+    background:#fff;
+
+    border:
+        1px solid #e2e8f0;
+
+    border-radius:16px;
+
+    overflow:hidden;
+
+}
+
+.gallery-image-wrap{
+
+    width:100%;
+
+    aspect-ratio:4/3;
+
+    background:#e2e8f0;
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+.gallery-image{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+    display:block;
+
+}
+
+.gallery-placeholder{
+
+    width:100%;
+
+    height:100%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    color:#64748b;
+
+    font-weight:800;
+
+}
+
+.gallery-info{
+    padding:15px;
+}
+
+.gallery-name{
+
+    font-size:16px;
+
+    font-weight:800;
+
+}
+
+.gallery-batch{
+
+    margin-top:4px;
+
+    font-size:12px;
+
+    color:#64748b;
+
+}
+
+.gallery-description{
+
+    margin-top:9px;
+
+    font-size:13px;
+
+    color:#475569;
+
+    line-height:1.5;
+
+}
+
+.gallery-actions{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:7px;
+
+    margin-top:13px;
+
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal{
+
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    background:
+        rgba(15,23,42,.75);
+
+    z-index:2000;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:20px;
+
+}
+
+.modal.show{
+
+    display:flex;
+
+}
+
+.modal-box{
+
+    background:#fff;
+
+    width:100%;
+
+    max-width:850px;
+
+    max-height:90vh;
+
+    overflow:auto;
+
+    border-radius:18px;
+
+    padding:22px;
+
+}
+
+.modal-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    gap:15px;
+
+    align-items:center;
+
+    margin-bottom:15px;
+
+}
+
+.modal-header h3{
+    margin:0;
+}
+
+.close-btn{
+
+    border:0;
+
+    background:#e2e8f0;
+
+    width:35px;
+
+    height:35px;
+
+    border-radius:50%;
+
+    font-size:20px;
+
+}
+
+.modal-image{
+
+    width:100%;
+
+    max-height:65vh;
+
+    object-fit:contain;
+
+    background:#f1f5f9;
+
+    border-radius:12px;
+
+}
+
+.modal-meta{
+
+    color:#64748b;
+
+    font-size:13px;
+
+    margin-bottom:12px;
+
+}
+
+.modal-description{
+
+    margin-top:12px;
+
+    color:#334155;
+
+    line-height:1.6;
+
+}
+
+
+/* =========================================================
+   LOADING / EMPTY
+========================================================= */
+
+.loading,
+.empty{
+
+    padding:40px;
+
+    text-align:center;
+
+    color:#64748b;
+
+}
+
+.error-box{
+
+    padding:15px;
+
+    border-radius:10px;
+
+    background:#fee2e2;
+
+    color:#991b1b;
+
+    margin-bottom:15px;
+
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1100px){
+
+    .stats-grid{
+
+        grid-template-columns:
+            repeat(2,1fr);
+
+    }
+
+    .analytics-grid{
+
+        grid-template-columns:
+            repeat(2,1fr);
+
+    }
+
+    .magazine-grid,
+    .gallery-grid{
+
+        grid-template-columns:
+            repeat(2,1fr);
+
+    }
+
+}
+
+@media(max-width:800px){
+
+    .sidebar{
+
+        transform:
+            translateX(-100%);
+
+        transition:.25s;
+
+    }
+
+    .sidebar.open{
+
+        transform:
+            translateX(0);
+
+    }
+
+    .main{
+
+        margin-left:0;
+
+        width:100%;
+
+    }
+
+    .mobile-menu{
+
+        display:block;
+
+        border:0;
+
+        background:#e2e8f0;
+
+        width:38px;
+
+        height:38px;
+
+        border-radius:9px;
+
+        font-size:20px;
+
+    }
+
+}
+
+@media(max-width:600px){
+
+    .content{
+        padding:14px;
+    }
+
+    .stats-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .analytics-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .magazine-grid,
+    .gallery-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .topbar h1{
+        font-size:17px;
+    }
+
+}
+
+
+/* =========================================================
+   PRINT
+========================================================= */
+
+@media print{
+
+    .sidebar,
+    .topbar,
+    .toolbar,
+    .btn{
+
+        display:none !important;
+
+    }
+
+    .main{
+
+        margin:0;
+
+        width:100%;
+
+    }
+
+    .content{
+        padding:0;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =======================================================
+     LOGIN
+======================================================= -->
+
+<div id="loginScreen">
+
+    <div class="login-box">
+
+        <div class="login-logo">
+            PHS
+        </div>
+
+        <h1>
+            Admin Dashboard
+        </h1>
+
+        <p>
+            Paharchanda High School Alumni Association <br>
+            Diamond Jubilee 2027
+        </p>
+
+        <div class="form-group">
+
+            <label>
+                Admin Email
+            </label>
+
+            <input
+                type="email"
+                id="adminEmail"
+                placeholder="Enter admin email"
+                autocomplete="username"
+            >
+
+        </div>
+
+        <div class="form-group">
+
+            <label>
+                Password
+            </label>
+
+            <input
+                type="password"
+                id="adminPassword"
+                placeholder="Enter password"
+                autocomplete="current-password"
+            >
+
+        </div>
+
+        <button
+            class="btn btn-primary"
+            id="loginBtn"
+            style="width:100%"
+        >
+            Login
+        </button>
+
+        <div
+            id="loginMessage"
+            style="
+                margin-top:14px;
+                text-align:center;
+                color:#dc2626;
+                font-size:13px;
+            "
+        ></div>
+
+    </div>
+
+</div>
+
+
+<!-- =======================================================
+     ADMIN APP
+======================================================= -->
+
+<div id="adminApp">
+
+    <div class="admin-layout">
+
+        <aside
+            class="sidebar"
+            id="sidebar"
+        >
+
+            <div class="sidebar-header">
+
+                <h2>
+                    Paharchanda High School
+                </h2>
+
+                <p>
+                    Grand Reunion 2027
+                </p>
+
+            </div>
+
+            <nav class="nav">
+
+                <button
+                    class="active"
+                    data-section="dashboard"
+                >
+                    📊 Dashboard
+                </button>
+
+                <button data-section="alumni">
+                    👥 Alumni
+                </button>
+
+                <button data-section="directory">
+                    📖 Alumni Directory
+                </button>
+
+                <button data-section="payments">
+                    💳 Payments
+                </button>
+
+                <button data-section="magazine">
+                    📰 Magazine
+                </button>
+
+                <button data-section="gallery">
+                    🖼 Magazine Photos
+                </button>
+
+                <button data-section="attendance">
+                    ✅ Attendance
+                </button>
+
+                <button data-section="food">
+                    🍱 Food Tokens
+                </button>
+
+                <button data-section="reports">
+                    📑 Reports
+                </button>
+
+                <button
+                    class="logout-btn"
+                    id="logoutBtn"
+                >
+                    🚪 Logout
+                </button>
+
+            </nav>
+
+        </aside>
+
+
+        <main class="main">
+
+            <header class="topbar">
+
+                <div
+                    style="
+                        display:flex;
+                        align-items:center;
+                        gap:10px;
+                    "
+                >
+
+                    <button
+                        class="mobile-menu"
+                        id="mobileMenu"
+                    >
+                        ☰
+                    </button>
+
+                    <h1 id="pageTitle">
+                        Dashboard
+                    </h1>
+
+                </div>
+
+                <div
+                    style="
+                        font-size:12px;
+                        color:#64748b;
+                    "
+                >
+                    Admin Panel
+                </div>
+
+            </header>
+
+
+            <div class="content">
+
+
+                <!-- =================================================
+                     DASHBOARD
+                ================================================= -->
+
+                <section
+                    class="section active"
+                    id="section-dashboard"
+                >
+
+                    <div class="section-title">
+
+                        <h2>
+                            Dashboard
+                        </h2>
+
+                        <p>
+                            Grand Reunion 2027 overview
+                        </p>
+
+                    </div>
+
+
+                    <div class="stats-grid">
+
+                        <div class="stat-card">
+
+                            <div class="stat-label">
+                                Total Alumni
+                            </div>
+
+                            <div
+                                class="stat-value"
+                                id="totalAlumni"
+                            >
+                                0
+                            </div>
+
+                        </div>
+
+
+                        <div class="stat-card">
+
+                            <div class="stat-label">
+                                Approved Payments
+                            </div>
+
+                            <div
+                                class="stat-value"
+                                id="approvedPayments"
+                            >
+                                0
+                            </div>
+
+                        </div>
+
+
+                        <div class="stat-card">
+
+                            <div class="stat-label">
+                                Magazine Submissions
+                            </div>
+
+                            <div
+                                class="stat-value"
+                                id="totalMagazine"
+                            >
+                                0
+                            </div>
+
+                        </div>
+
+
+                        <div class="stat-card">
+
+                            <div class="stat-label">
+                                Photo Submissions
+                            </div>
+
+                            <div
+                                class="stat-value"
+                                id="totalPhotos"
+                            >
+                                0
+                            </div>
+
+                        </div>
+
+
+                        <div class="stat-card">
+
+                            <div class="stat-label">
+                                Male
+                            </div>
+
+                            <div
+                                class="stat-value"
+                                id="maleCount"
+                            >
+                                0
+                            </div>
+
+                        </div>
+
+
+                        <div class="stat-card">
+
+                            <div class="stat-label">
+                                Female
+                            </div>
+
+                            <div
+                                class="stat-value"
+                                id="femaleCount"
+                            >
+                                0
+                            </div>
+
+                        </div>
+
+
+                        <div class="stat-card">
+
+                            <div class="stat-label">
+                                Attendance
+                            </div>
+
+                            <div
+                                class="stat-value"
+                                id="attendanceCount"
+                            >
+                                0
+                            </div>
+
+                        </div>
+
+
+                        <div class="stat-card">
+
+                            <div class="stat-label">
+                                Food Collected
+                            </div>
+
+                            <div
+                                class="stat-value"
+                                id="foodCount"
+                            >
+                                0
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         LIVE PAYMENT OVERVIEW
+                    ================================================= -->
+
+                    <div class="card">
+
+                        <div class="live-header">
+
+                            <div>
+
+                                <h3 class="live-title">
+                                    💰 Live Payment Overview
+                                </h3>
+
+                            </div>
+
+                            <div class="live-badge">
+
+                                <span class="live-dot"></span>
+
+                                LIVE
+
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            class="analytics-grid"
+                            id="paymentAnalytics"
+                        >
+
+                            <div class="analytics-card">
+
+                                <div class="analytics-card-label">
+                                    Total Registered
+                                </div>
+
+                                <div
+                                    class="analytics-card-value"
+                                    id="analyticsRegistered"
+                                >
+                                    0
+                                </div>
+
+                            </div>
+
+
+                            <div class="analytics-card">
+
+                                <div class="analytics-card-label">
+                                    Approved
+                                </div>
+
+                                <div
+                                    class="analytics-card-value"
+                                    id="analyticsApproved"
+                                >
+                                    0
+                                </div>
+
+                            </div>
+
+
+                            <div class="analytics-card">
+
+                                <div class="analytics-card-label">
+                                    Pending
+                                </div>
+
+                                <div
+                                    class="analytics-card-value"
+                                    id="analyticsPending"
+                                >
+                                    0
+                                </div>
+
+                            </div>
+
+
+                            <div class="analytics-card">
+
+                                <div class="analytics-card-label">
+                                    Approved Amount
+                                </div>
+
+                                <div
+                                    class="analytics-card-value"
+                                    id="analyticsApprovedAmount"
+                                >
+                                    ৳0
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         PAYMENT METHOD
+                    ================================================= -->
+
+                    <div class="card">
+
+                        <div class="live-header">
+
+                            <h3 class="live-title">
+                                💳 Payment Method Summary
+                            </h3>
+
+                            <div class="live-badge">
+
+                                <span class="live-dot"></span>
+
+                                LIVE
+
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            id="paymentMethodSummary"
+                            class="table-wrap"
+                        >
+
+                            <div class="loading">
+                                Loading...
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         CATEGORY SUMMARY
+                    ================================================= -->
+
+                    <div class="card">
+
+                        <div class="live-header">
+
+                            <h3 class="live-title">
+                                🏷️ Category-wise Registration & Approval
+                            </h3>
+
+                            <div class="live-badge">
+
+                                <span class="live-dot"></span>
+
+                                LIVE
+
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            id="categorySummary"
+                            class="table-wrap"
+                        >
+
+                            <div class="loading">
+                                Loading...
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         BATCH SUMMARY
+                    ================================================= -->
+
+                    <div class="card">
+
+                        <div class="live-header">
+
+                            <h3 class="live-title">
+                                🎓 Batch-wise Registration
+                            </h3>
+
+                            <div class="live-badge">
+
+                                <span class="live-dot"></span>
+
+                                LIVE
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            id="batchSummary"
+                            class="table-wrap"
+                        >
+
+                            <div class="loading">
+                                Loading...
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="card">
+
+                        <h3>
+                            Package Summary
+                        </h3>
+
+                        <div
+                            id="packageSummary"
+                            class="table-wrap"
+                        >
+
+                            <div class="loading">
+                                Loading...
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     ALUMNI
+                ================================================= -->
+
+                <section
+                    class="section"
+                    id="section-alumni"
+                >
+
+                    <div class="section-title">
+
+                        <h2>
+                            Registered Alumni
+                        </h2>
+
+                        <p>
+                            Manage registered members
+                        </p>
+
+                    </div>
+
+
+                    <div class="toolbar">
+
+                        <input
+                            class="search-input"
+                            id="alumniSearch"
+                            placeholder="Search name, member ID, phone, batch..."
+                        >
+
+                        <button
+                            class="btn btn-primary"
+                            onclick="printAlumni()"
+                        >
+                            🖨 Print
+                        </button>
+
+                    </div>
+
+
+                    <div class="card">
+
+                        <div
+                            id="alumniTable"
+                            class="table-wrap"
+                        >
+
+                            <div class="loading">
+                                Loading alumni...
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     DIRECTORY
+                ================================================= -->
+
+                <section
+                    class="section"
+                    id="section-directory"
+                >
+
+                    <div class="section-title">
+
+                        <h2>
+                            Alumni Directory
+                        </h2>
+
+                        <p>
+                            View alumni profiles
+                        </p>
+
+                    </div>
+
+
+                    <div class="toolbar">
+
+                        <input
+                            class="search-input"
+                            id="directorySearch"
+                            placeholder="Search alumni..."
+                        >
+
+                    </div>
+
+
+                    <div
+                        id="directoryGrid"
+                        class="gallery-grid"
+                    ></div>
+
+                </section>
+
+
+                <!-- =================================================
+                     PAYMENTS
+                ================================================= -->
+
+                <section
+                    class="section"
+                    id="section-payments"
+                >
+
+                    <div class="section-title">
+
+                        <h2>
+                            Payment Management
+                        </h2>
+
+                        <p>
+                            Approve or reject registration payments
+                        </p>
+
+                    </div>
+
+
+                    <div class="toolbar">
+
+                        <input
+                            class="search-input"
+                            id="paymentSearch"
+                            placeholder="Search member..."
+                        >
+
+                    </div>
+
+
+                    <div class="card">
+
+                        <div
+                            id="paymentTable"
+                            class="table-wrap"
+                        ></div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     MAGAZINE
+                ================================================= -->
+
+                <section
+                    class="section"
+                    id="section-magazine"
+                >
+
+                    <div class="section-title">
+
+                        <h2>
+                            Alumni Magazine
+                        </h2>
+
+                        <p>
+                            Manage writings and photo submissions
+                        </p>
+
+                    </div>
+
+
+                    <div class="toolbar">
+
+                        <input
+                            class="search-input"
+                            id="magazineSearch"
+                            placeholder="Search magazine submissions..."
+                        >
+
+                        <button
+                            class="btn btn-primary"
+                            onclick="printMagazine()"
+                        >
+                            🖨 Print
+                        </button>
+
+                    </div>
+
+
+                    <div class="card">
+
+                        <h3>
+                            Writings
+                        </h3>
+
+                        <div
+                            id="articleContent"
+                        ></div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     GALLERY
+                ================================================= -->
+
+                <section
+                    class="section"
+                    id="section-gallery"
+                >
+
+                    <div class="section-title">
+
+                        <h2>
+                            Magazine Photo Gallery
+                        </h2>
+
+                        <p>
+                            View, download and delete submitted photos
+                        </p>
+
+                    </div>
+
+
+                    <div class="toolbar">
+
+                        <input
+                            class="search-input"
+                            id="gallerySearch"
+                            placeholder="Search member or SSC batch..."
+                        >
+
+                        <select
+                            id="galleryBatch"
+                            style="
+                                padding:10px;
+                                border:1px solid #cbd5e1;
+                                border-radius:9px;
+                            "
+                        >
+
+                            <option value="">
+                                All Batches
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div
+                        id="photoGallery"
+                        class="gallery-grid"
+                    ></div>
+
+                </section>
+
+
+                <!-- =================================================
+                     ATTENDANCE
+                ================================================= -->
+
+                <section
+                    class="section"
+                    id="section-attendance"
+                >
+
+                    <div class="section-title">
+
+                        <h2>
+                            Attendance
+                        </h2>
+
+                        <p>
+                            Reunion attendance records
+                        </p>
+
+                    </div>
+
+
+                    <div class="card">
+
+                        <div
+                            id="attendanceTable"
+                            class="table-wrap"
+                        ></div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     FOOD
+                ================================================= -->
+
+                <section
+                    class="section"
+                    id="section-food"
+                >
+
+                    <div class="section-title">
+
+                        <h2>
+                            Food Token
+                        </h2>
+
+                        <p>
+                            Food token collection records
+                        </p>
+
+                    </div>
+
+
+                    <div class="card">
+
+                        <div
+                            id="foodTable"
+                            class="table-wrap"
+                        ></div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     REPORTS
+                ================================================= -->
+
+                <section
+                    class="section"
+                    id="section-reports"
+                >
+
+                    <div class="section-title">
+
+                        <h2>
+                            Reports
+                        </h2>
+
+                        <p>
+                            Export and print dashboard information
+                        </p>
+
+                    </div>
+
+
+                    <div class="card">
+
+                        <div
+                            style="
+                                display:flex;
+                                flex-wrap:wrap;
+                                gap:10px;
+                            "
+                        >
+
+                            <button
+                                class="btn btn-primary"
+                                onclick="downloadAlumniCSV()"
+                            >
+                                ⬇ Alumni CSV
+                            </button>
+
+
+                            <button
+                                class="btn btn-success"
+                                onclick="downloadMagazineCSV()"
+                            >
+                                ⬇ Magazine CSV
+                            </button>
+
+
+                            <button
+                                class="btn btn-secondary"
+                                onclick="window.print()"
+                            >
+                                🖨 Print
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+            </div>
+
+        </main>
+
+    </div>
+
+</div>
+
+
+<!-- PROFILE MODAL -->
+
+<div
+    class="modal"
+    id="profileModal"
+>
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <h3>
+                Alumni Profile
+            </h3>
+
+            <button
+                class="close-btn"
+                onclick="closeModal('profileModal')"
+            >
+                ×
+            </button>
+
+        </div>
+
+        <div id="profileContent"></div>
+
+    </div>
+
+</div>
+
+
+<!-- PHOTO MODAL -->
+
+<div
+    class="modal"
+    id="photoModal"
+>
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <h3 id="photoModalTitle">
+                Magazine Photo
+            </h3>
+
+            <button
+                class="close-btn"
+                onclick="closeModal('photoModal')"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div
+            class="modal-meta"
+            id="photoModalMeta"
+        ></div>
+
+
+        <img
+            id="photoModalImage"
+            class="modal-image"
+            alt="Magazine Photo"
+        >
+
+
+        <div
+            id="photoModalGallery"
+            style="
+                display:flex;
+                flex-wrap:wrap;
+                gap:8px;
+                margin-top:12px;
+            "
+        ></div>
+
+
+        <div
+            id="photoModalDescription"
+            class="modal-description"
+        ></div>
+
+    </div>
+
+</div>
+
+
+<!-- ARTICLE MODAL -->
+
+<div
+    class="modal"
+    id="articleModal"
+>
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <h3 id="articleModalTitle">
+                Magazine Writing
+            </h3>
+
+            <button
+                class="close-btn"
+                onclick="closeModal('articleModal')"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div
+            id="articleModalMeta"
+            class="modal-meta"
+        ></div>
+
+
+        <div
+            id="articleModalContent"
+            style="
+                line-height:1.8;
+                white-space:pre-wrap;
+            "
+        ></div>
+
+    </div>
+
+</div>
+
+
+<script src="admin.js"></script>
+
+</body>
+
+</html>
