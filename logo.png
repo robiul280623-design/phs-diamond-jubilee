@@ -1,0 +1,15 @@
+<a
+    href="index.html"
+    class="logo"
+>
+
+    <img
+        src="assets/logo.png"
+        alt="Paharchanda High School Logo"
+    >
+
+    <span>
+        Diamond Jubilee
+    </span>
+
+</a>
