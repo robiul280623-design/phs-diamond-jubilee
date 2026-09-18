@@ -1,0 +1,1289 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>
+    Paharchanda High School | Diamond Jubilee 2027
+</title><style>
+/* =========================================================
+   PAHARCHANDA HIGH SCHOOL
+   HOME PAGE
+   Diamond Jubilee • Grand Reunion 2027
+========================================================= */
+
+:root{
+    --navy:#071A33;
+    --navy-2:#0B2547;
+    --blue:#123D70;
+    --blue-light:#1D5A98;
+    --gold:#D8B15A;
+    --gold-light:#F0D48A;
+    --white:#FFFFFF;
+    --text:#17263A;
+    --muted:#66758A;
+    --soft:#F5F7FA;
+    --border:#E4E9F0;
+    --shadow:0 14px 40px rgba(7,26,51,.10);
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    background:#F7F9FC;
+    color:var(--text);
+}
+
+a{
+    text-decoration:none;
+    color:inherit;
+}
+
+button,
+a{
+    -webkit-tap-highlight-color:transparent;
+}
+
+/* =========================================================
+   PAGE WRAPPER
+========================================================= */
+
+.home-page{
+    min-height:100vh;
+    overflow:hidden;
+}
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+.home-page .navbar{
+    position:sticky;
+    top:0;
+    z-index:1000;
+    background:rgba(7,26,51,.96);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.home-page .nav-container{
+    width:min(1180px,92%);
+    margin:auto;
+    min-height:70px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.home-page .nav-logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color:#fff;
+    font-size:14px;
+    font-weight:800;
+    letter-spacing:.15px;
+}
+
+.home-page .nav-logo-mark{
+    width:38px;
+    height:38px;
+    border-radius:12px;
+    display:grid;
+    place-items:center;
+    color:var(--gold-light);
+    background:rgba(216,177,90,.12);
+    border:1px solid rgba(216,177,90,.25);
+}
+
+.home-page .nav-logo-mark svg{
+    width:21px;
+    height:21px;
+}
+
+.home-page .nav-menu{
+    display:flex;
+    align-items:center;
+    gap:5px;
+}
+
+.home-page .nav-menu a{
+    color:#DCE5F0;
+    padding:10px 13px;
+    border-radius:9px;
+    font-size:12px;
+    font-weight:700;
+    transition:.2s ease;
+}
+
+.home-page .nav-menu a:hover{
+    background:rgba(255,255,255,.08);
+    color:#fff;
+}
+
+.home-page .nav-menu .nav-highlight{
+    color:var(--navy);
+    background:var(--gold);
+}
+
+.home-page .nav-menu .nav-highlight:hover{
+    background:var(--gold-light);
+    color:var(--navy);
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.home-page .hero{
+    position:relative;
+    background:
+        radial-gradient(
+            circle at 15% 10%,
+            rgba(29,90,152,.40),
+            transparent 32%
+        ),
+        radial-gradient(
+            circle at 85% 20%,
+            rgba(216,177,90,.14),
+            transparent 28%
+        ),
+        linear-gradient(
+            135deg,
+            #06172D 0%,
+            #092448 52%,
+            #071A33 100%
+        );
+    color:#fff;
+    padding:72px 0 82px;
+}
+
+.home-page .hero::after{
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:-1px;
+    height:70px;
+    background:#F7F9FC;
+    clip-path:polygon(0 100%,100% 20%,100% 100%);
+}
+
+.home-page .hero-inner{
+    position:relative;
+    z-index:2;
+    width:min(1120px,92%);
+    margin:auto;
+    text-align:center;
+}
+
+/* =========================================================
+   ORGANIZER
+========================================================= */
+
+.home-page .organizer-badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:9px;
+    max-width:100%;
+    margin-bottom:15px;
+    padding:9px 15px;
+    border-radius:999px;
+    color:#E9EEF5;
+    background:rgba(255,255,255,.055);
+    border:1px solid rgba(255,255,255,.13);
+    box-shadow:0 8px 24px rgba(0,0,0,.08);
+    font-size:10px;
+    line-height:1.4;
+    font-weight:600;
+    letter-spacing:.2px;
+}
+
+.home-page .organizer-badge svg{
+    width:17px;
+    height:17px;
+    flex:0 0 17px;
+    color:var(--gold-light);
+}
+
+.home-page .organizer-badge strong{
+    color:var(--gold-light);
+    font-weight:800;
+}
+
+/* =========================================================
+   EVENT LABEL
+========================================================= */
+
+.home-page .event-label{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:7px 13px;
+    border-radius:999px;
+    background:rgba(216,177,90,.11);
+    border:1px solid rgba(216,177,90,.28);
+    color:var(--gold-light);
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:1px;
+    text-transform:uppercase;
+}
+
+.home-page .event-label svg{
+    width:14px;
+    height:14px;
+}
+
+.home-page .hero h1{
+    margin-top:20px;
+    font-size:clamp(32px,6vw,65px);
+    line-height:1.05;
+    font-weight:900;
+    letter-spacing:-1.8px;
+}
+
+.home-page .hero h2{
+    margin-top:13px;
+    color:var(--gold-light);
+    font-size:clamp(19px,3vw,30px);
+    font-weight:800;
+    letter-spacing:-.3px;
+}
+
+.home-page .hero-subtitle{
+    max-width:690px;
+    margin:17px auto 0;
+    color:#C8D4E3;
+    font-size:14px;
+    line-height:1.8;
+}
+
+/* =========================================================
+   COUNTDOWN
+========================================================= */
+
+.home-page .countdown-grid{
+    width:min(850px,100%);
+    margin:35px auto 0;
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:16px;
+}
+
+.home-page .countdown-card{
+    padding:20px;
+    text-align:left;
+    border-radius:18px;
+    background:rgba(255,255,255,.065);
+    border:1px solid rgba(255,255,255,.11);
+    box-shadow:0 14px 35px rgba(0,0,0,.12);
+}
+
+.home-page .countdown-top{
+    display:flex;
+    align-items:center;
+    gap:11px;
+}
+
+.home-page .countdown-icon{
+    width:38px;
+    height:38px;
+    border-radius:12px;
+    display:grid;
+    place-items:center;
+    flex:0 0 38px;
+    color:var(--gold-light);
+    background:rgba(216,177,90,.12);
+}
+
+.home-page .countdown-icon svg{
+    width:20px;
+    height:20px;
+}
+
+.home-page .countdown-card h3{
+    font-size:13px;
+    font-weight:800;
+    color:#fff;
+}
+
+.home-page .countdown-card .date{
+    margin-top:3px;
+    color:#AEBED0;
+    font-size:10px;
+}
+
+.home-page .countdown-values{
+    margin-top:17px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:7px;
+}
+
+.home-page .time-box{
+    padding:11px 5px;
+    text-align:center;
+    border-radius:10px;
+    background:rgba(0,0,0,.16);
+}
+
+.home-page .time-box strong{
+    display:block;
+    color:#fff;
+    font-size:21px;
+    line-height:1;
+    font-weight:900;
+}
+
+.home-page .time-box span{
+    display:block;
+    margin-top:5px;
+    color:#91A4BA;
+    font-size:8px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.5px;
+}
+
+/* =========================================================
+   MAIN ACTIONS
+========================================================= */
+
+.home-page .main-actions{
+    width:min(980px,100%);
+    margin:32px auto 0;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+}
+
+.home-page .main-action{
+    position:relative;
+    min-height:142px;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    justify-content:center;
+    text-align:left;
+    padding:22px;
+    border-radius:17px;
+    background:#fff;
+    color:var(--text);
+    border:1px solid rgba(255,255,255,.12);
+    box-shadow:0 16px 38px rgba(0,0,0,.13);
+    transition:.22s ease;
+}
+
+.home-page .main-action:hover{
+    transform:translateY(-4px);
+    box-shadow:0 20px 45px rgba(0,0,0,.18);
+}
+
+.home-page .action-icon{
+    width:43px;
+    height:43px;
+    border-radius:13px;
+    display:grid;
+    place-items:center;
+    margin-bottom:13px;
+    color:var(--blue);
+    background:#EEF4FB;
+}
+
+.home-page .action-icon svg{
+    width:22px;
+    height:22px;
+}
+
+.home-page .main-action h3{
+    font-size:14px;
+    font-weight:900;
+}
+
+.home-page .main-action p{
+    margin-top:6px;
+    color:var(--muted);
+    font-size:10px;
+    line-height:1.55;
+}
+
+.home-page .action-arrow{
+    position:absolute;
+    right:17px;
+    top:18px;
+    color:#9AA8B8;
+}
+
+.home-page .action-arrow svg{
+    width:16px;
+    height:16px;
+}
+
+/* =========================================================
+   SECTION
+========================================================= */
+
+.home-page .portal-section{
+    width:min(1100px,92%);
+    margin:0 auto;
+    padding:85px 0 65px;
+}
+
+.home-page .section-heading{
+    text-align:center;
+    margin-bottom:31px;
+}
+
+.home-page .section-heading .eyebrow{
+    color:#B08B3E;
+    font-size:10px;
+    font-weight:900;
+    letter-spacing:1.6px;
+}
+
+.home-page .section-heading h2{
+    margin-top:8px;
+    color:var(--navy);
+    font-size:clamp(24px,4vw,34px);
+    font-weight:900;
+}
+
+.home-page .section-heading p{
+    max-width:620px;
+    margin:10px auto 0;
+    color:var(--muted);
+    font-size:12px;
+    line-height:1.7;
+}
+
+/* =========================================================
+   SERVICE GRID
+========================================================= */
+
+.home-page .service-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+}
+
+.home-page .service-card{
+    display:block;
+    min-height:180px;
+    padding:22px;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:17px;
+    box-shadow:var(--shadow);
+    transition:.22s ease;
+}
+
+.home-page .service-card:hover{
+    transform:translateY(-4px);
+    border-color:#CFD8E5;
+    box-shadow:0 18px 42px rgba(7,26,51,.14);
+}
+
+.home-page .service-icon{
+    width:43px;
+    height:43px;
+    border-radius:13px;
+    display:grid;
+    place-items:center;
+    color:var(--blue);
+    background:#EEF4FB;
+    margin-bottom:15px;
+}
+
+.home-page .service-icon svg{
+    width:21px;
+    height:21px;
+}
+
+.home-page .service-card h3{
+    color:var(--navy);
+    font-size:13px;
+    line-height:1.35;
+    font-weight:900;
+}
+
+.home-page .service-card p{
+    margin-top:7px;
+    color:var(--muted);
+    font-size:10px;
+    line-height:1.65;
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.home-page footer{
+    padding:38px 20px 28px;
+    text-align:center;
+    color:#AEBCCD;
+    background:var(--navy);
+}
+
+.home-page footer h3{
+    color:#fff;
+    font-size:14px;
+    font-weight:900;
+}
+
+.home-page footer .footer-organizer{
+    margin-top:7px;
+    color:var(--gold-light);
+    font-size:10px;
+    font-weight:700;
+}
+
+.home-page footer p{
+    margin-top:8px;
+    font-size:10px;
+    line-height:1.6;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:900px){
+
+    .home-page .service-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .home-page .main-actions{
+        grid-template-columns:1fr;
+    }
+
+    .home-page .main-action{
+        min-height:120px;
+    }
+
+}
+
+@media(max-width:700px){
+
+    .home-page .nav-container{
+        min-height:62px;
+    }
+
+    .home-page .nav-logo span{
+        display:none;
+    }
+
+    .home-page .nav-logo-mark{
+        width:35px;
+        height:35px;
+    }
+
+    .home-page .nav-menu{
+        gap:2px;
+        overflow-x:auto;
+        scrollbar-width:none;
+    }
+
+    .home-page .nav-menu::-webkit-scrollbar{
+        display:none;
+    }
+
+    .home-page .nav-menu a{
+        padding:8px 8px;
+        font-size:10px;
+        white-space:nowrap;
+    }
+
+    .home-page .hero{
+        padding:52px 0 72px;
+    }
+
+    .home-page .hero h1{
+        letter-spacing:-1px;
+    }
+
+    .home-page .organizer-badge{
+        max-width:94%;
+        font-size:9px;
+        padding:8px 11px;
+    }
+
+    .home-page .organizer-badge svg{
+        width:15px;
+        height:15px;
+        flex-basis:15px;
+    }
+
+    .home-page .countdown-grid{
+        grid-template-columns:1fr;
+    }
+
+    .home-page .portal-section{
+        padding-top:65px;
+    }
+
+}
+
+@media(max-width:480px){
+
+    .home-page .hero-subtitle{
+        font-size:12px;
+        line-height:1.7;
+    }
+
+    .home-page .countdown-card{
+        padding:16px;
+    }
+
+    .home-page .countdown-values{
+        gap:5px;
+    }
+
+    .home-page .time-box{
+        padding:9px 3px;
+    }
+
+    .home-page .time-box strong{
+        font-size:18px;
+    }
+
+    .home-page .service-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+</style></head><body><div class="home-page"><!-- =====================================================
+     NAVBAR
+===================================================== --><nav class="navbar"><div class="nav-container">
+
+    <a href="index.html" class="nav-logo">
+
+        <span class="nav-logo-mark">
+
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="1.7">
+                <path d="M3 20V9l9-6 9 6v11"/>
+                <path d="M7 20v-7h10v7"/>
+                <path d="M9 20v-4h6v4"/>
+            </svg>
+
+        </span>
+
+        <span>
+            Paharchanda High School
+        </span>
+
+    </a>
+
+
+    <div class="nav-menu">
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="registered.html">
+            Register
+        </a>
+
+        <a href="magazine.html">
+            Magazine
+        </a>
+
+        <a href="verify.html">
+            Alumni
+        </a>
+
+        <a
+            href="id-card.html"
+            class="nav-highlight"
+        >
+            ID & Food
+        </a>
+
+    </div>
+
+</div>
+
+</nav><!-- =====================================================
+     HERO
+===================================================== --><header class="hero"><div class="hero-inner">
+
+    <!-- ORGANIZER -->
+
+    <div class="organizer-badge">
+
+        <svg viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="1.7">
+
+            <path d="M3 20V9l9-6 9 6v11"/>
+            <path d="M7 20v-7h10v7"/>
+            <path d="M9 20v-4h6v4"/>
+
+        </svg>
+
+        <span>
+            Organised by
+            <strong>
+                Paharchanda High School Alumni Association
+            </strong>
+        </span>
+
+    </div>
+
+
+    <!-- EVENT LABEL -->
+
+    <div class="event-label">
+
+        <svg viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="1.8">
+
+            <path d="M12 3v18"/>
+            <path d="M3 12h18"/>
+            <circle cx="12" cy="12" r="9"/>
+
+        </svg>
+
+        Diamond Jubilee • Grand Reunion 2027
+
+    </div>
+
+
+    <h1>
+        Paharchanda High School
+    </h1>
+
+    <h2>
+        Celebrating Our Legacy Together
+    </h2>
+
+    <p class="hero-subtitle">
+        Reconnect with classmates, preserve cherished memories,
+        celebrate our shared journey and be part of the
+        Grand Reunion 2027.
+    </p>
+
+
+    <!-- =================================================
+         COUNTDOWNS
+    ================================================== -->
+
+    <div class="countdown-grid">
+
+
+        <!-- EVENT COUNTDOWN -->
+
+        <div class="countdown-card">
+
+            <div class="countdown-top">
+
+                <div class="countdown-icon">
+
+                    <svg viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.7">
+
+                        <circle cx="12" cy="12" r="9"/>
+                        <path d="M12 7v5l3 2"/>
+
+                    </svg>
+
+                </div>
+
+                <div>
+
+                    <h3>
+                        Grand Reunion Countdown
+                    </h3>
+
+                    <div class="date">
+                        13 March 2027 • 7:30 AM
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="countdown-values">
+
+                <div class="time-box">
+                    <strong id="eventDays">00</strong>
+                    <span>Days</span>
+                </div>
+
+                <div class="time-box">
+                    <strong id="eventHours">00</strong>
+                    <span>Hours</span>
+                </div>
+
+                <div class="time-box">
+                    <strong id="eventMinutes">00</strong>
+                    <span>Minutes</span>
+                </div>
+
+                <div class="time-box">
+                    <strong id="eventSeconds">00</strong>
+                    <span>Seconds</span>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- REGISTRATION COUNTDOWN -->
+
+        <div class="countdown-card">
+
+            <div class="countdown-top">
+
+                <div class="countdown-icon">
+
+                    <svg viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.7">
+
+                        <rect
+                            x="3"
+                            y="4"
+                            width="18"
+                            height="17"
+                            rx="2"
+                        />
+
+                        <path d="M8 2v4"/>
+                        <path d="M16 2v4"/>
+                        <path d="M3 9h18"/>
+
+                        <path d="M8 13h2"/>
+                        <path d="M14 13h2"/>
+                        <path d="M8 17h2"/>
+                        <path d="M14 17h2"/>
+
+                    </svg>
+
+                </div>
+
+                <div>
+
+                    <h3>
+                        Registration Deadline
+                    </h3>
+
+                    <div class="date">
+                        31 January 2027 • 11:59 PM
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="countdown-values">
+
+                <div class="time-box">
+                    <strong id="regDays">00</strong>
+                    <span>Days</span>
+                </div>
+
+                <div class="time-box">
+                    <strong id="regHours">00</strong>
+                    <span>Hours</span>
+                </div>
+
+                <div class="time-box">
+                    <strong id="regMinutes">00</strong>
+                    <span>Minutes</span>
+                </div>
+
+                <div class="time-box">
+                    <strong id="regSeconds">00</strong>
+                    <span>Seconds</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         MAIN ACTIONS
+    ================================================== -->
+
+    <div class="main-actions">
+
+
+        <!-- REGISTRATION -->
+
+        <a
+            href="registered.html"
+            class="main-action"
+        >
+
+            <div class="action-icon">
+
+                <svg viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="1.7">
+
+                    <path d="M4 4h16v16H4z"/>
+                    <path d="M8 8h8"/>
+                    <path d="M8 12h8"/>
+                    <path d="M8 16h5"/>
+
+                </svg>
+
+            </div>
+
+            <h3>
+                Registration
+            </h3>
+
+            <p>
+                Register for the Grand Reunion 2027.
+            </p>
+
+            <span class="action-arrow">
+
+                <svg viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="1.8">
+
+                    <path d="M5 12h14"/>
+                    <path d="m13 6 6 6-6 6"/>
+
+                </svg>
+
+            </span>
+
+        </a>
+
+
+        <!-- MAGAZINE -->
+
+        <a
+            href="magazine.html"
+            class="main-action"
+        >
+
+            <div class="action-icon">
+
+                <svg viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="1.7">
+
+                    <path d="M5 4h14v16H5z"/>
+                    <path d="M8 8h8"/>
+                    <path d="M8 12h8"/>
+                    <path d="M8 16h5"/>
+
+                </svg>
+
+            </div>
+
+            <h3>
+                Magazine
+            </h3>
+
+            <p>
+                Submit your writings and old photographs.
+            </p>
+
+            <span class="action-arrow">
+
+                <svg viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="1.8">
+
+                    <path d="M5 12h14"/>
+                    <path d="m13 6 6 6-6 6"/>
+
+                </svg>
+
+            </span>
+
+        </a>
+
+
+        <!-- ID + FOOD -->
+
+        <a
+            href="id-card.html"
+            class="main-action"
+        >
+
+            <div class="action-icon">
+
+                <svg viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="1.7">
+
+                    <rect
+                        x="3"
+                        y="5"
+                        width="18"
+                        height="14"
+                        rx="2"
+                    />
+
+                    <circle cx="8" cy="11" r="2"/>
+
+                    <path d="M12 10h5"/>
+                    <path d="M12 14h4"/>
+
+                </svg>
+
+            </div>
+
+            <h3>
+                ID Card & Food Token
+            </h3>
+
+            <p>
+                After payment approval, use your
+                Member ID to download both.
+            </p>
+
+            <span class="action-arrow">
+
+                <svg viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="1.8">
+
+                    <path d="M5 12h14"/>
+                    <path d="m13 6 6 6-6 6"/>
+
+                </svg>
+
+            </span>
+
+        </a>
+
+    </div>
+
+</div>
+
+</header><!-- =====================================================
+     REUNION PORTAL
+===================================================== --><section class="portal-section"><div class="section-heading">
+
+    <div class="eyebrow">
+        REUNION PORTAL
+    </div>
+
+    <h2>
+        Explore the Reunion Portal
+    </h2>
+
+    <p>
+        Access verification, check-in, food token
+        and management services from one place.
+    </p>
+
+</div>
+
+
+<div class="service-grid">
+
+
+    <!-- ALUMNI -->
+
+    <a
+        href="verify.html"
+        class="service-card"
+    >
+
+        <div class="service-icon">
+
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="1.7">
+
+                <circle cx="9" cy="8" r="3"/>
+                <path d="M3 20c0-3.3 2.7-6 6-6"/>
+                <path d="M15 11l2 2 4-4"/>
+
+            </svg>
+
+        </div>
+
+        <h3>
+            Alumni Verification & Directory
+        </h3>
+
+        <p>
+            Verify a Member ID and find registered
+            alumni and classmates.
+        </p>
+
+    </a>
+
+
+    <!-- QR CHECK-IN -->
+
+    <a
+        href="qr-check.html"
+        class="service-card"
+    >
+
+        <div class="service-icon">
+
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="1.7">
+
+                <rect x="4" y="4" width="6" height="6"/>
+                <rect x="14" y="4" width="6" height="6"/>
+                <rect x="4" y="14" width="6" height="6"/>
+                <path d="M14 14h3v3h3v3"/>
+                <path d="M14 20v-3"/>
+                <path d="M17 14h3"/>
+
+            </svg>
+
+        </div>
+
+        <h3>
+            QR Check-in
+        </h3>
+
+        <p>
+            Scan an Alumni QR code for fast
+            event check-in.
+        </p>
+
+    </a>
+
+
+    <!-- FOOD TOKEN -->
+
+    <a
+        href="food-scanner.html"
+        class="service-card"
+    >
+
+        <div class="service-icon">
+
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="1.7">
+
+                <path d="M7 3v7"/>
+                <path d="M4 3v5a3 3 0 0 0 6 0V3"/>
+                <path d="M7 11v10"/>
+                <path d="M17 3v18"/>
+                <path d="M17 3c2 2 3 4 3 7h-3"/>
+
+            </svg>
+
+        </div>
+
+        <h3>
+            Food Token Check
+        </h3>
+
+        <p>
+            Scan Food Token QR codes during
+            food distribution.
+        </p>
+
+    </a>
+
+
+    <!-- MANAGEMENT -->
+
+    <a
+        href="admin-login.html"
+        class="service-card"
+    >
+
+        <div class="service-icon">
+
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="1.7">
+
+                <rect x="3" y="4" width="18" height="16" rx="2"/>
+                <path d="M7 16v-4"/>
+                <path d="M12 16V8"/>
+                <path d="M17 16v-6"/>
+
+            </svg>
+
+        </div>
+
+        <h3>
+            Diamond Jubilee Management
+        </h3>
+
+        <p>
+            Manage registrations, payments,
+            attendance and reunion operations.
+        </p>
+
+    </a>
+
+</div>
+
+</section><!-- =====================================================
+     FOOTER
+===================================================== --><footer><h3>
+    Paharchanda High School
+</h3>
+
+<p class="footer-organizer">
+    Organised by Paharchanda High School Alumni Association
+</p>
+
+<p>
+    Diamond Jubilee 2027 • Grand Reunion 2027
+    <br>
+    Developed by Robiul Alam Batch-2018
+</p>
+
+<p>
+    © 2027 All Rights Reserved
+</p>
+
+</footer></div><!-- =====================================================
+     JAVASCRIPT
+===================================================== --><script src="index.js"></script></body>
+</html>
