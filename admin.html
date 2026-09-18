@@ -1,0 +1,3346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Paharchanda High School | Admin Dashboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+
+:root{
+ --navy:#071d3a;
+ --navy2:#0d2d55;
+ --gold:#d6aa35;
+ --gold2:#f2d47a;
+ --bg:#f3f6fa;
+ --card:#fff;
+ --text:#172033;
+ --muted:#718096;
+ --green:#149447;
+ --red:#d9363e;
+ --orange:#e58a00;
+ --blue:#1769aa;
+ --border:#e2e8f0;
+ --shadow:0 8px 25px rgba(15,23,42,.07);
+}
+
+*{
+ box-sizing:border-box;
+}
+
+body{
+ margin:0;
+ font-family:Inter,Arial,sans-serif;
+ background:var(--bg);
+ color:var(--text);
+}
+
+button,
+input,
+select,
+textarea{
+ font-family:inherit;
+}
+
+button{
+ cursor:pointer;
+}
+
+.app{
+ display:flex;
+ min-height:100vh;
+}
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+.sidebar{
+ width:260px;
+ background:linear-gradient(180deg,#061a35,#0b284d);
+ color:#fff;
+ position:fixed;
+ left:0;
+ top:0;
+ bottom:0;
+ overflow-y:auto;
+ z-index:1000;
+ box-shadow:4px 0 20px rgba(0,0,0,.15);
+}
+
+.brand{
+ padding:22px 18px;
+ border-bottom:1px solid rgba(255,255,255,.12);
+ text-align:center;
+}
+
+.brand-icon{
+ width:58px;
+ height:58px;
+ border-radius:50%;
+ background:linear-gradient(135deg,var(--gold),#fff0a8);
+ color:var(--navy);
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ margin:0 auto 10px;
+ font-size:25px;
+ font-weight:800;
+}
+
+.brand h1{
+ font-size:16px;
+ margin:0 0 5px;
+ line-height:1.35;
+}
+
+.brand p{
+ margin:0;
+ font-size:10px;
+ color:#d9e5f5;
+ line-height:1.5;
+}
+
+.menu{
+ padding:14px 10px 20px;
+}
+
+.menu-title{
+ font-size:10px;
+ text-transform:uppercase;
+ color:#8ea5c3;
+ padding:12px 12px 7px;
+ letter-spacing:1px;
+}
+
+.menu button{
+ width:100%;
+ border:0;
+ background:transparent;
+ color:#dbe8f7;
+ padding:12px 13px;
+ margin:2px 0;
+ border-radius:10px;
+ text-align:left;
+ display:flex;
+ align-items:center;
+ gap:12px;
+ font-size:13px;
+ transition:.2s;
+}
+
+.menu button i{
+ width:20px;
+ text-align:center;
+ color:#bcd0e8;
+}
+
+.menu button:hover,
+.menu button.active{
+ background:rgba(255,255,255,.12);
+ color:#fff;
+}
+
+.menu button.active i{
+ color:var(--gold2);
+}
+
+.logout-btn{
+ margin-top:15px!important;
+ color:#ffb5b5!important;
+}
+
+.logout-btn i{
+ color:#ff8e8e!important;
+}
+
+/* =====================================================
+   MAIN
+===================================================== */
+
+.main{
+ margin-left:260px;
+ width:calc(100% - 260px);
+ min-width:0;
+}
+
+.topbar{
+ height:72px;
+ background:#fff;
+ border-bottom:1px solid var(--border);
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ padding:0 25px;
+ position:sticky;
+ top:0;
+ z-index:500;
+}
+
+.top-title{
+ display:flex;
+ align-items:center;
+ gap:12px;
+}
+
+.top-title i{
+ color:var(--gold);
+ font-size:23px;
+}
+
+.top-title h2{
+ margin:0;
+ font-size:18px;
+}
+
+.top-title span{
+ display:block;
+ color:var(--muted);
+ font-size:10px;
+ margin-top:3px;
+}
+
+.live{
+ display:flex;
+ align-items:center;
+ gap:7px;
+ background:#ecfdf3;
+ color:#118343;
+ padding:7px 12px;
+ border-radius:30px;
+ font-size:11px;
+ font-weight:700;
+}
+
+.live-dot{
+ width:8px;
+ height:8px;
+ background:#16a34a;
+ border-radius:50%;
+}
+
+.content{
+ padding:25px;
+}
+
+.page{
+ display:none;
+}
+
+.page.active{
+ display:block;
+}
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.page-header{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:15px;
+ margin-bottom:20px;
+ flex-wrap:wrap;
+}
+
+.page-header h3{
+ margin:0;
+ font-size:21px;
+}
+
+.page-header p{
+ margin:5px 0 0;
+ color:var(--muted);
+ font-size:12px;
+}
+
+/* =====================================================
+   STATS
+===================================================== */
+
+.stats-grid{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:15px;
+ margin-bottom:20px;
+}
+
+.stat-card{
+ background:#fff;
+ border:1px solid var(--border);
+ border-radius:14px;
+ padding:18px;
+ box-shadow:var(--shadow);
+ position:relative;
+ overflow:hidden;
+}
+
+.stat-card:after{
+ content:"";
+ position:absolute;
+ right:-20px;
+ bottom:-25px;
+ width:80px;
+ height:80px;
+ border-radius:50%;
+ background:rgba(214,170,53,.08);
+}
+
+.stat-top{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+}
+
+.stat-icon{
+ width:42px;
+ height:42px;
+ border-radius:12px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ background:#edf4ff;
+ color:var(--blue);
+}
+
+.stat-number{
+ font-size:27px;
+ font-weight:800;
+ margin-top:13px;
+}
+
+.stat-label{
+ color:var(--muted);
+ font-size:11px;
+ margin-top:3px;
+}
+
+/* =====================================================
+   PANELS
+===================================================== */
+
+.panel{
+ background:#fff;
+ border:1px solid var(--border);
+ border-radius:14px;
+ box-shadow:var(--shadow);
+ overflow:hidden;
+ margin-bottom:20px;
+}
+
+.panel-head{
+ padding:15px 18px;
+ border-bottom:1px solid var(--border);
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:10px;
+ flex-wrap:wrap;
+}
+
+.panel-title{
+ display:flex;
+ align-items:center;
+ gap:10px;
+ font-size:14px;
+ font-weight:800;
+}
+
+.panel-title i{
+ color:var(--gold);
+}
+
+.panel-body{
+ padding:18px;
+}
+
+/* =====================================================
+   FILTERS
+===================================================== */
+
+.filters{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:10px;
+ margin-bottom:15px;
+}
+
+.field{
+ display:flex;
+ flex-direction:column;
+ gap:5px;
+}
+
+.field label{
+ font-size:10px;
+ font-weight:700;
+ color:#64748b;
+}
+
+.field input,
+.field select,
+.field textarea{
+ border:1px solid #dbe3ec;
+ border-radius:9px;
+ padding:10px 11px;
+ outline:none;
+ font-size:12px;
+ background:#fff;
+}
+
+.field textarea{
+ min-height:120px;
+ resize:vertical;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus{
+ border-color:#8aa8ca;
+ box-shadow:0 0 0 3px rgba(23,105,170,.08);
+}
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+
+.btn{
+ border:0;
+ border-radius:8px;
+ padding:9px 12px;
+ font-size:11px;
+ font-weight:700;
+ display:inline-flex;
+ align-items:center;
+ justify-content:center;
+ gap:6px;
+}
+
+.btn-primary{
+ background:var(--navy);
+ color:#fff;
+}
+
+.btn-gold{
+ background:var(--gold);
+ color:#152238;
+}
+
+.btn-green{
+ background:#e9f9ef;
+ color:#12803d;
+}
+
+.btn-red{
+ background:#fff0f1;
+ color:#c62831;
+}
+
+.btn-blue{
+ background:#edf5ff;
+ color:#145b9c;
+}
+
+.btn-gray{
+ background:#eef2f7;
+ color:#475569;
+}
+
+.action-row{
+ display:flex;
+ gap:5px;
+ flex-wrap:wrap;
+}
+
+/* =====================================================
+   TABLE
+===================================================== */
+
+.table-wrap{
+ overflow-x:auto;
+}
+
+table{
+ width:100%;
+ border-collapse:collapse;
+ min-width:950px;
+}
+
+th{
+ background:#f7f9fc;
+ color:#536275;
+ font-size:10px;
+ text-align:left;
+ padding:11px 10px;
+ white-space:nowrap;
+}
+
+td{
+ border-top:1px solid #edf1f5;
+ padding:11px 10px;
+ font-size:11px;
+ vertical-align:middle;
+}
+
+tr:hover td{
+ background:#fbfdff;
+}
+
+/* =====================================================
+   STATUS
+===================================================== */
+
+.status{
+ display:inline-flex;
+ align-items:center;
+ gap:5px;
+ border-radius:30px;
+ padding:5px 8px;
+ font-size:9px;
+ font-weight:800;
+}
+
+.status.approved{
+ background:#e9f9ef;
+ color:#12803d;
+}
+
+.status.pending{
+ background:#fff7e5;
+ color:#b76b00;
+}
+
+.status.rejected{
+ background:#fff0f1;
+ color:#c62831;
+}
+
+.status.deleted{
+ background:#f1f5f9;
+ color:#64748b;
+}
+
+/* =====================================================
+   BATCH
+===================================================== */
+
+.category-block{
+ margin-bottom:22px;
+}
+
+.category-title{
+ display:flex;
+ align-items:center;
+ gap:9px;
+ margin-bottom:10px;
+ font-size:15px;
+ font-weight:800;
+}
+
+.category-title i{
+ color:var(--gold);
+}
+
+.batch-grid{
+ display:grid;
+ grid-template-columns:repeat(5,1fr);
+ gap:10px;
+}
+
+.batch-card{
+ background:#fff;
+ border:1px solid var(--border);
+ border-radius:12px;
+ padding:14px;
+ cursor:pointer;
+ transition:.2s;
+}
+
+.batch-card:hover{
+ transform:translateY(-2px);
+ border-color:#c4d2e2;
+ box-shadow:var(--shadow);
+}
+
+.batch-icon{
+ width:35px;
+ height:35px;
+ border-radius:9px;
+ background:#eef5ff;
+ color:#1769aa;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ margin-bottom:10px;
+}
+
+.batch-card strong{
+ font-size:15px;
+}
+
+.batch-card small{
+ display:block;
+ color:var(--muted);
+ font-size:10px;
+ margin-top:4px;
+}
+
+/* =====================================================
+   SHIRT
+===================================================== */
+
+.shirt-grid{
+ display:grid;
+ grid-template-columns:repeat(6,1fr);
+ gap:10px;
+}
+
+.shirt{
+ border:1px solid var(--border);
+ border-radius:10px;
+ padding:12px;
+ text-align:center;
+}
+
+.shirt i{
+ color:var(--gold);
+ margin-bottom:7px;
+}
+
+.shirt strong{
+ display:block;
+ font-size:20px;
+}
+
+.shirt span{
+ font-size:10px;
+ color:var(--muted);
+}
+
+/* =====================================================
+   COUNTDOWN
+===================================================== */
+
+.countdown{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:10px;
+}
+
+.time-box{
+ background:linear-gradient(135deg,#071d3a,#123a68);
+ color:#fff;
+ padding:17px;
+ border-radius:12px;
+ text-align:center;
+}
+
+.time-box strong{
+ font-size:25px;
+ display:block;
+}
+
+.time-box span{
+ font-size:9px;
+ color:#c5d5e8;
+}
+
+/* =====================================================
+   MAGAZINE TABS
+===================================================== */
+
+.mag-tabs{
+ display:flex;
+ gap:8px;
+ flex-wrap:wrap;
+ margin-bottom:15px;
+}
+
+.mag-tab{
+ border:1px solid var(--border);
+ background:#fff;
+ padding:9px 14px;
+ border-radius:8px;
+ font-size:11px;
+ font-weight:700;
+}
+
+.mag-tab.active{
+ background:var(--navy);
+ color:#fff;
+}
+
+/* =====================================================
+   MAGAZINE GRID
+===================================================== */
+
+.mag-grid{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:14px;
+}
+
+.mag-card{
+ border:1px solid var(--border);
+ border-radius:12px;
+ padding:14px;
+ background:#fff;
+ overflow:hidden;
+}
+
+.mag-photo{
+ width:100%;
+ height:180px;
+ object-fit:cover;
+ border-radius:9px;
+ background:#f1f5f9;
+ display:block;
+}
+
+.mag-title{
+ font-size:14px;
+ font-weight:800;
+ margin:10px 0 5px;
+}
+
+.mag-meta{
+ color:var(--muted);
+ font-size:10px;
+ line-height:1.7;
+}
+
+.mag-excerpt{
+ margin-top:8px;
+ padding:9px;
+ background:#f8fafc;
+ border-radius:8px;
+ font-size:10px;
+ line-height:1.6;
+ color:#475569;
+ max-height:90px;
+ overflow:hidden;
+ white-space:pre-wrap;
+}
+
+.mag-actions{
+ display:flex;
+ gap:5px;
+ flex-wrap:wrap;
+ margin-top:10px;
+}
+
+/* =====================================================
+   MEMBER PHOTO BANK
+===================================================== */
+
+.photo-bank-card{
+ border:1px solid var(--border);
+ border-radius:12px;
+ padding:12px;
+ background:#fff;
+ text-align:center;
+}
+
+.photo-bank-photo{
+ width:35mm;
+ height:45mm;
+ max-width:100%;
+ object-fit:cover;
+ border:1px solid #d6aa35;
+ border-radius:3px;
+ background:#f1f5f9;
+ display:block;
+ margin:0 auto 10px;
+}
+
+.photo-bank-name{
+ font-size:12px;
+ font-weight:800;
+ margin-bottom:4px;
+}
+
+.photo-bank-info{
+ font-size:9px;
+ line-height:1.6;
+ color:#64748b;
+}
+
+.photo-bank-actions{
+ display:flex;
+ justify-content:center;
+ gap:5px;
+ margin-top:9px;
+ flex-wrap:wrap;
+}
+
+/* =====================================================
+   MEMBER PHOTO SHEET
+===================================================== */
+
+.photo-sheet{
+ width:210mm;
+ min-height:297mm;
+ margin:auto;
+ padding:8mm;
+ background:#fff;
+ box-sizing:border-box;
+}
+
+.photo-sheet-header{
+ text-align:center;
+ margin-bottom:6mm;
+ border-bottom:1px solid #d6aa35;
+ padding-bottom:4mm;
+}
+
+.photo-sheet-header h1{
+ margin:0;
+ font-size:18px;
+ color:#071d3a;
+}
+
+.photo-sheet-header p{
+ margin:3px 0 0;
+ font-size:10px;
+ color:#64748b;
+}
+
+.photo-sheet-grid{
+ display:grid;
+ grid-template-columns:repeat(4,45mm);
+ gap:7mm 3mm;
+ justify-content:center;
+ align-items:start;
+}
+
+.photo-sheet-item{
+ width:45mm;
+ text-align:center;
+ break-inside:avoid;
+ page-break-inside:avoid;
+}
+
+.photo-sheet-item img{
+ width:35mm;
+ height:45mm;
+ object-fit:cover;
+ display:block;
+ margin:0 auto 2.5mm;
+ border:1px solid #b89531;
+}
+
+.photo-sheet-caption{
+ font-size:7.5px;
+ line-height:1.4;
+ color:#172033;
+ word-break:break-word;
+}
+
+.photo-sheet-caption strong{
+ font-size:8px;
+}
+
+.photo-sheet-batch{
+ font-weight:800;
+ color:#071d3a;
+}
+
+.photo-sheet-group{
+ margin-bottom:7mm;
+ break-inside:avoid;
+}
+
+.photo-sheet-group-title{
+ font-size:12px;
+ font-weight:800;
+ color:#071d3a;
+ border-bottom:1px solid #dbe3ec;
+ padding-bottom:2mm;
+ margin-bottom:4mm;
+}
+
+/* =====================================================
+   MAGAZINE PRINT SHEET
+===================================================== */
+
+.mag-print-sheet{
+ width:210mm;
+ min-height:297mm;
+ margin:auto;
+ padding:10mm;
+ background:#fff;
+}
+
+.mag-print-header{
+ text-align:center;
+ border-bottom:1px solid #d6aa35;
+ padding-bottom:5mm;
+ margin-bottom:7mm;
+}
+
+.mag-print-header h1{
+ margin:0;
+ font-size:18px;
+ color:#071d3a;
+}
+
+.mag-print-header p{
+ margin:3px 0 0;
+ font-size:9px;
+ color:#64748b;
+}
+
+.mag-print-item{
+ break-inside:avoid;
+ page-break-inside:avoid;
+ border-bottom:1px solid #dbe3ec;
+ padding-bottom:8mm;
+ margin-bottom:8mm;
+}
+
+.mag-print-item:last-child{
+ border-bottom:0;
+}
+
+.mag-print-photo{
+ max-width:100%;
+ max-height:145mm;
+ width:auto;
+ height:auto;
+ object-fit:contain;
+ display:block;
+ margin:0 auto 5mm;
+}
+
+.mag-print-title{
+ font-size:15px;
+ font-weight:800;
+ color:#071d3a;
+ margin-bottom:4mm;
+}
+
+.mag-print-meta{
+ font-size:9px;
+ line-height:1.7;
+ color:#64748b;
+ margin-bottom:4mm;
+}
+
+.mag-print-description{
+ font-size:10px;
+ line-height:1.7;
+ white-space:pre-wrap;
+}
+
+.mag-print-writing{
+ font-size:11px;
+ line-height:1.8;
+ white-space:pre-wrap;
+}
+
+/* =====================================================
+   MODAL
+===================================================== */
+
+.modal{
+ position:fixed;
+ inset:0;
+ background:rgba(3,12,25,.68);
+ z-index:5000;
+ display:none;
+ align-items:center;
+ justify-content:center;
+ padding:15px;
+}
+
+.modal.show{
+ display:flex;
+}
+
+.modal-box{
+ width:min(1000px,100%);
+ max-height:94vh;
+ overflow:auto;
+ background:#fff;
+ border-radius:15px;
+ box-shadow:0 20px 60px rgba(0,0,0,.25);
+}
+
+.modal-head{
+ position:sticky;
+ top:0;
+ z-index:2;
+ background:#fff;
+ border-bottom:1px solid var(--border);
+ padding:15px 18px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+}
+
+.modal-head h3{
+ margin:0;
+ font-size:15px;
+}
+
+.modal-close{
+ border:0;
+ background:#f1f5f9;
+ width:34px;
+ height:34px;
+ border-radius:8px;
+}
+
+.modal-body{
+ padding:20px;
+}
+
+.modal-actions{
+ padding:12px 18px;
+ border-top:1px solid var(--border);
+ display:flex;
+ justify-content:flex-end;
+ gap:7px;
+ flex-wrap:wrap;
+}
+
+/* =====================================================
+   MEMBER PROFILE
+===================================================== */
+
+.member-profile{
+ display:grid;
+ grid-template-columns:130px 1fr;
+ gap:20px;
+}
+
+.member-photo{
+ width:125px;
+ height:150px;
+ object-fit:cover;
+ border-radius:10px;
+ border:3px solid #e5d28b;
+ background:#f1f5f9;
+}
+
+.info-grid{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:8px;
+}
+
+.info-item{
+ border:1px solid var(--border);
+ border-radius:8px;
+ padding:9px;
+}
+
+.info-item small{
+ display:block;
+ color:var(--muted);
+ font-size:9px;
+}
+
+.info-item strong{
+ display:block;
+ margin-top:3px;
+ font-size:11px;
+}
+
+/* =====================================================
+   ID CARD
+===================================================== */
+
+.print-sheet{
+ background:#fff;
+}
+
+.id-sheet{
+ width:208mm;
+ margin:0 auto;
+ display:grid;
+ grid-template-columns:repeat(2,101.6mm);
+ column-gap:4.8mm;
+ row-gap:5mm;
+ padding-bottom:25mm;
+}
+
+.id-card{
+ width:101.6mm;
+ height:76.2mm;
+ border:1px solid #bd9a34;
+ border-radius:4mm;
+ overflow:hidden;
+ background:#fff;
+ position:relative;
+ box-sizing:border-box;
+}
+
+.id-header{
+ height:17mm;
+ background:linear-gradient(135deg,#071d3a,#123b69);
+ color:#fff;
+ text-align:center;
+ padding:3mm 2mm 1mm;
+}
+
+.id-header strong{
+ font-size:10px;
+ display:block;
+}
+
+.id-header span{
+ display:block;
+ font-size:6px;
+ margin-top:1px;
+}
+
+.id-body{
+ height:50mm;
+ display:grid;
+ grid-template-columns:25mm 1fr 25mm;
+ gap:2mm;
+ padding:3mm;
+}
+
+.id-photo{
+ width:23mm;
+ height:29mm;
+ object-fit:cover;
+ border:1px solid #d6aa35;
+ border-radius:2mm;
+}
+
+.id-info{
+ font-size:6.5px;
+ line-height:1.5;
+}
+
+.id-info h4{
+ font-size:9px;
+ margin:0 0 2px;
+}
+
+.id-qr{
+ width:21mm;
+ height:21mm;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+}
+
+.id-qr img,
+.id-qr canvas{
+ width:21mm!important;
+ height:21mm!important;
+}
+
+.verify-seal{
+ position:absolute;
+ left:50%;
+ bottom:5mm;
+ transform:translateX(-50%);
+ border:1px solid #168044;
+ color:#168044;
+ width:19mm;
+ height:9mm;
+ border-radius:50%;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ text-align:center;
+ font-size:5px;
+ font-weight:800;
+}
+
+.id-footer{
+ position:absolute;
+ left:0;
+ right:0;
+ bottom:1.5mm;
+ text-align:center;
+ font-size:4.5px;
+ color:#68778a;
+}
+
+.food-token{
+ width:101.6mm;
+ height:76.2mm;
+}
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+.toast{
+ position:fixed;
+ right:20px;
+ bottom:20px;
+ background:#071d3a;
+ color:#fff;
+ padding:12px 16px;
+ border-radius:9px;
+ box-shadow:0 10px 30px rgba(0,0,0,.2);
+ font-size:11px;
+ z-index:9000;
+ transform:translateY(100px);
+ opacity:0;
+ transition:.3s;
+}
+
+.toast.show{
+ transform:translateY(0);
+ opacity:1;
+}
+
+/* =====================================================
+   EMPTY
+===================================================== */
+
+.empty{
+ padding:35px;
+ text-align:center;
+ color:var(--muted);
+}
+
+.empty i{
+ display:block;
+ font-size:32px;
+ margin-bottom:10px;
+ color:#cbd5e1;
+}
+
+/* =====================================================
+   MOBILE MENU
+===================================================== */
+
+.mobile-menu{
+ display:none;
+ border:0;
+ background:#f1f5f9;
+ width:40px;
+ height:40px;
+ border-radius:9px;
+}
+
+/* =====================================================
+   A4 PREVIEW
+===================================================== */
+
+.a4-sheet-preview{
+ width:210mm;
+ min-height:297mm;
+ background:#fff;
+ padding:7mm 1mm 25mm 1mm;
+ box-sizing:border-box;
+ margin:auto;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width:1100px){
+
+ .stats-grid{
+  grid-template-columns:repeat(2,1fr);
+ }
+
+ .batch-grid{
+  grid-template-columns:repeat(3,1fr);
+ }
+
+ .filters{
+  grid-template-columns:repeat(2,1fr);
+ }
+
+ .mag-grid{
+  grid-template-columns:repeat(2,1fr);
+ }
+
+ .photo-sheet-grid{
+  grid-template-columns:repeat(4,45mm);
+ }
+
+}
+
+@media(max-width:760px){
+
+ .sidebar{
+  transform:translateX(-100%);
+  transition:.25s;
+ }
+
+ .sidebar.open{
+  transform:translateX(0);
+ }
+
+ .main{
+  margin-left:0;
+  width:100%;
+ }
+
+ .mobile-menu{
+  display:block;
+ }
+
+ .topbar{
+  padding:0 12px;
+ }
+
+ .content{
+  padding:14px;
+ }
+
+ .stats-grid{
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+ }
+
+ .filters{
+  grid-template-columns:1fr;
+ }
+
+ .batch-grid{
+  grid-template-columns:repeat(2,1fr);
+ }
+
+ .shirt-grid{
+  grid-template-columns:repeat(3,1fr);
+ }
+
+ .countdown{
+  grid-template-columns:repeat(2,1fr);
+ }
+
+ .mag-grid{
+  grid-template-columns:1fr;
+ }
+
+ .member-profile{
+  grid-template-columns:1fr;
+ }
+
+ .member-photo{
+  margin:auto;
+ }
+
+ .info-grid{
+  grid-template-columns:1fr;
+ }
+
+ .top-title h2{
+  font-size:14px;
+ }
+
+ .live{
+  display:none;
+ }
+
+}
+
+/* =====================================================
+   PRINT
+===================================================== */
+
+@media print{
+
+ @page{
+  margin:0;
+ }
+
+ body{
+  background:#fff!important;
+ }
+
+ .no-print,
+ .sidebar,
+ .topbar{
+  display:none!important;
+ }
+
+ .main{
+  margin:0!important;
+  width:100%!important;
+ }
+
+ .content{
+  padding:0!important;
+ }
+
+ .print-sheet{
+  display:block!important;
+ }
+
+ .photo-sheet,
+ .mag-print-sheet{
+  width:210mm!important;
+  min-height:297mm!important;
+  margin:0!important;
+ }
+
+}
+
+/* =====================================================
+   MOBILE PREVIEW SCALE
+===================================================== */
+
+@media(max-width:850px){
+
+ .a4-sheet-preview{
+  transform-origin:top left;
+  transform:scale(.75);
+  margin-bottom:-70mm;
+ }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<aside class="sidebar" id="sidebar">
+
+<div class="brand">
+
+<div class="brand-icon">
+<i class="fa-solid fa-school"></i>
+</div>
+
+<h1>PAHARCHANDA HIGH SCHOOL</h1>
+
+<p>
+DIAMOND JUBILEE 1965–2025<br>
+GRAND REUNION 2027
+</p>
+
+</div>
+
+<div class="menu">
+
+<div class="menu-title">Main</div>
+
+<button class="nav-btn active" data-page="dashboard">
+<i class="fa-solid fa-gauge-high"></i>
+Dashboard
+</button>
+
+<button class="nav-btn" data-page="members">
+<i class="fa-solid fa-users"></i>
+Member Directory
+</button>
+
+<button class="nav-btn" data-page="payments">
+<i class="fa-solid fa-credit-card"></i>
+Payments
+</button>
+
+<button class="nav-btn" data-page="batch">
+<i class="fa-solid fa-layer-group"></i>
+Batch Management
+</button>
+
+<button class="nav-btn" data-page="idcards">
+<i class="fa-solid fa-id-card"></i>
+ID Cards
+</button>
+
+<button class="nav-btn" data-page="food">
+<i class="fa-solid fa-utensils"></i>
+Food Tokens
+</button>
+
+<button class="nav-btn" data-page="attendance">
+<i class="fa-solid fa-user-check"></i>
+Attendance
+</button>
+
+<div class="menu-title">Magazine</div>
+
+<button class="nav-btn" data-page="magazine">
+<i class="fa-solid fa-book-open"></i>
+Magazine
+</button>
+
+<button class="nav-btn" data-page="reports">
+<i class="fa-solid fa-chart-column"></i>
+Reports
+</button>
+
+<button class="nav-btn" data-page="dustbin">
+<i class="fa-solid fa-trash-can"></i>
+Dustbin
+</button>
+
+<button class="nav-btn logout-btn" id="logoutBtn">
+<i class="fa-solid fa-right-from-bracket"></i>
+Logout
+</button>
+
+</div>
+
+</aside>
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="main">
+
+<header class="topbar">
+
+<div class="top-title">
+
+<button class="mobile-menu" id="mobileMenu">
+<i class="fa-solid fa-bars"></i>
+</button>
+
+<i class="fa-solid fa-shield-halved"></i>
+
+<div>
+
+<h2 id="pageTitle">
+Admin Dashboard
+</h2>
+
+<span>
+Grand Reunion 2027 Management System
+</span>
+
+</div>
+
+</div>
+
+<div class="live">
+
+<span class="live-dot"></span>
+
+LIVE SYSTEM
+
+</div>
+
+</header>
+
+<div class="content">
+
+<!-- =====================================================
+     DASHBOARD
+===================================================== -->
+
+<section class="page active" id="page-dashboard">
+
+<div class="page-header">
+
+<div>
+
+<h3>
+<i class="fa-solid fa-gauge-high"></i>
+Dashboard
+</h3>
+
+<p>
+All important information at a glance
+</p>
+
+</div>
+
+<button
+class="btn btn-primary"
+onclick="loadAllData()">
+
+<i class="fa-solid fa-rotate"></i>
+Refresh
+
+</button>
+
+</div>
+
+<div class="stats-grid">
+
+<div class="stat-card">
+<div class="stat-top">
+<div class="stat-icon">
+<i class="fa-solid fa-users"></i>
+</div>
+</div>
+<div class="stat-number" id="totalMembers">0</div>
+<div class="stat-label">Total Registered Members</div>
+</div>
+
+<div class="stat-card">
+<div class="stat-top">
+<div class="stat-icon">
+<i class="fa-solid fa-circle-check"></i>
+</div>
+</div>
+<div class="stat-number" id="approvedMembers">0</div>
+<div class="stat-label">Approved Members</div>
+</div>
+
+<div class="stat-card">
+<div class="stat-top">
+<div class="stat-icon">
+<i class="fa-solid fa-clock"></i>
+</div>
+</div>
+<div class="stat-number" id="pendingMembers">0</div>
+<div class="stat-label">Pending Payments</div>
+</div>
+
+<div class="stat-card">
+<div class="stat-top">
+<div class="stat-icon">
+<i class="fa-solid fa-ban"></i>
+</div>
+</div>
+<div class="stat-number" id="rejectedMembers">0</div>
+<div class="stat-label">Rejected Payments</div>
+</div>
+
+<div class="stat-card">
+<div class="stat-top">
+<div class="stat-icon">
+<i class="fa-solid fa-person"></i>
+</div>
+</div>
+<div class="stat-number" id="maleMembers">0</div>
+<div class="stat-label">Male Members</div>
+</div>
+
+<div class="stat-card">
+<div class="stat-top">
+<div class="stat-icon">
+<i class="fa-solid fa-person-dress"></i>
+</div>
+</div>
+<div class="stat-number" id="femaleMembers">0</div>
+<div class="stat-label">Female Members</div>
+</div>
+
+<div class="stat-card">
+<div class="stat-top">
+<div class="stat-icon">
+<i class="fa-solid fa-graduation-cap"></i>
+</div>
+</div>
+<div class="stat-number" id="exStudents">0</div>
+<div class="stat-label">Ex-Students</div>
+</div>
+
+<div class="stat-card">
+<div class="stat-top">
+<div class="stat-icon">
+<i class="fa-solid fa-school"></i>
+</div>
+</div>
+<div class="stat-number" id="currentStudents">0</div>
+<div class="stat-label">Current Students</div>
+</div>
+
+<div class="stat-card">
+<div class="stat-top">
+<div class="stat-icon">
+<i class="fa-solid fa-people-roof"></i>
+</div>
+</div>
+<div class="stat-number" id="familyMembers">0</div>
+<div class="stat-label">Family Members</div>
+</div>
+
+<div class="stat-card">
+<div class="stat-top">
+<div class="stat-icon">
+<i class="fa-solid fa-money-bill-wave"></i>
+</div>
+</div>
+<div class="stat-number" id="totalAmount">৳0</div>
+<div class="stat-label">Total Registration Amount</div>
+</div>
+
+<div class="stat-card">
+<div class="stat-top">
+<div class="stat-icon">
+<i class="fa-solid fa-book-open"></i>
+</div>
+</div>
+<div class="stat-number" id="writingCount">0</div>
+<div class="stat-label">Magazine Writing</div>
+</div>
+
+<div class="stat-card">
+<div class="stat-top">
+<div class="stat-icon">
+<i class="fa-solid fa-camera"></i>
+</div>
+</div>
+<div class="stat-number" id="photoCount">0</div>
+<div class="stat-label">Magazine Photos</div>
+</div>
+
+</div>
+
+<div class="panel">
+
+<div class="panel-head">
+
+<div class="panel-title">
+
+<i class="fa-solid fa-hourglass-half"></i>
+
+Diamond Jubilee / Grand Reunion Countdown
+
+</div>
+
+</div>
+
+<div class="panel-body">
+
+<div class="countdown">
+
+<div class="time-box">
+<strong id="days">0</strong>
+<span>DAYS</span>
+</div>
+
+<div class="time-box">
+<strong id="hours">0</strong>
+<span>HOURS</span>
+</div>
+
+<div class="time-box">
+<strong id="minutes">0</strong>
+<span>MINUTES</span>
+</div>
+
+<div class="time-box">
+<strong id="seconds">0</strong>
+<span>SECONDS</span>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="panel">
+
+<div class="panel-head">
+
+<div class="panel-title">
+
+<i class="fa-solid fa-shirt"></i>
+
+T-Shirt Size Summary
+
+</div>
+
+<small style="color:#718096">
+Only EX-STUDENT & CURRENT STUDENT
+</small>
+
+</div>
+
+<div class="panel-body">
+
+<div class="shirt-grid">
+
+<div class="shirt">
+<i class="fa-solid fa-shirt"></i>
+<strong id="shirtS">0</strong>
+<span>S</span>
+</div>
+
+<div class="shirt">
+<i class="fa-solid fa-shirt"></i>
+<strong id="shirtM">0</strong>
+<span>M</span>
+</div>
+
+<div class="shirt">
+<i class="fa-solid fa-shirt"></i>
+<strong id="shirtL">0</strong>
+<span>L</span>
+</div>
+
+<div class="shirt">
+<i class="fa-solid fa-shirt"></i>
+<strong id="shirtXL">0</strong>
+<span>XL</span>
+</div>
+
+<div class="shirt">
+<i class="fa-solid fa-shirt"></i>
+<strong id="shirtXXL">0</strong>
+<span>XXL</span>
+</div>
+
+<div class="shirt">
+<i class="fa-solid fa-shirt"></i>
+<strong id="shirtXXXL">0</strong>
+<span>XXXL</span>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="panel">
+
+<div class="panel-head">
+
+<div class="panel-title">
+
+<i class="fa-solid fa-compass"></i>
+
+Quick Management
+
+</div>
+
+</div>
+
+<div class="panel-body">
+
+<div class="batch-grid">
+
+<div class="batch-card"
+onclick="showPage('members')">
+
+<div class="batch-icon">
+<i class="fa-solid fa-users"></i>
+</div>
+
+<strong>Members</strong>
+
+<small>
+View & manage members
+</small>
+
+</div>
+
+<div class="batch-card"
+onclick="showPage('payments')">
+
+<div class="batch-icon">
+<i class="fa-solid fa-credit-card"></i>
+</div>
+
+<strong>Payments</strong>
+
+<small>
+Approve payments
+</small>
+
+</div>
+
+<div class="batch-card"
+onclick="showPage('batch')">
+
+<div class="batch-icon">
+<i class="fa-solid fa-layer-group"></i>
+</div>
+
+<strong>Batch</strong>
+
+<small>
+Category & batch data
+</small>
+
+</div>
+
+<div class="batch-card"
+onclick="showPage('idcards')">
+
+<div class="batch-icon">
+<i class="fa-solid fa-id-card"></i>
+</div>
+
+<strong>ID Cards</strong>
+
+<small>
+Preview & print
+</small>
+
+</div>
+
+<div class="batch-card"
+onclick="showPage('food')">
+
+<div class="batch-icon">
+<i class="fa-solid fa-utensils"></i>
+</div>
+
+<strong>Food Tokens</strong>
+
+<small>
+Batch-wise token
+</small>
+
+</div>
+
+<div class="batch-card"
+onclick="showPage('magazine')">
+
+<div class="batch-icon">
+<i class="fa-solid fa-book-open"></i>
+</div>
+
+<strong>Magazine</strong>
+
+<small>
+Writing & photos
+</small>
+
+</div>
+
+<div class="batch-card"
+onclick="showPage('reports')">
+
+<div class="batch-icon">
+<i class="fa-solid fa-chart-column"></i>
+</div>
+
+<strong>Reports</strong>
+
+<small>
+Full reports
+</small>
+
+</div>
+
+<div class="batch-card"
+onclick="showPage('dustbin')">
+
+<div class="batch-icon">
+<i class="fa-solid fa-trash-can"></i>
+</div>
+
+<strong>Dustbin</strong>
+
+<small>
+Restore deleted data
+</small>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- =====================================================
+     MEMBERS
+===================================================== -->
+
+<section class="page" id="page-members">
+
+<div class="page-header">
+
+<div>
+
+<h3>
+<i class="fa-solid fa-users"></i>
+Member Directory
+</h3>
+
+<p>
+Category → Batch → Member management
+</p>
+
+</div>
+
+</div>
+
+<div class="panel">
+
+<div class="panel-body">
+
+<div class="filters">
+
+<div class="field">
+
+<label>Category</label>
+
+<select id="memberCategoryFilter">
+
+<option value="">
+All Categories
+</option>
+
+<option value="EX-STUDENT">
+EX-STUDENT
+</option>
+
+<option value="CURRENT STUDENT">
+CURRENT STUDENT
+</option>
+
+<option value="FAMILY">
+FAMILY
+</option>
+
+</select>
+
+</div>
+
+<div class="field">
+
+<label>Batch / Class</label>
+
+<select id="memberBatchFilter">
+
+<option value="">
+All Batch / Class
+</option>
+
+</select>
+
+</div>
+
+<div class="field">
+
+<label>Payment Status</label>
+
+<select id="memberStatusFilter">
+
+<option value="">
+All Status
+</option>
+
+<option value="Approved">
+Approved
+</option>
+
+<option value="Pending">
+Pending
+</option>
+
+<option value="Rejected">
+Rejected
+</option>
+
+</select>
+
+</div>
+
+<div class="field">
+
+<label>Search</label>
+
+<input
+id="memberSearch"
+placeholder="Name / Member ID / Mobile">
+
+</div>
+
+</div>
+
+<div class="action-row"
+style="margin-bottom:12px">
+
+<button
+class="btn btn-primary"
+onclick="renderMembers()">
+
+<i class="fa-solid fa-filter"></i>
+Apply Filter
+
+</button>
+
+<button
+class="btn btn-gray"
+onclick="resetMemberFilter()">
+
+<i class="fa-solid fa-rotate-left"></i>
+Reset
+
+</button>
+
+<button
+class="btn btn-gold"
+onclick="downloadMembersCSV()">
+
+<i class="fa-solid fa-file-csv"></i>
+Download CSV
+
+</button>
+
+</div>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Name</th>
+<th>Member ID</th>
+<th>Batch/Class</th>
+<th>Profession</th>
+<th>Mobile</th>
+<th>Category</th>
+<th>Package</th>
+<th>Payment</th>
+<th>Amount</th>
+<th>Transaction</th>
+<th>Status</th>
+<th>Actions</th>
+
+</tr>
+
+</thead>
+
+<tbody id="memberTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- =====================================================
+     PAYMENTS
+===================================================== -->
+
+<section class="page" id="page-payments">
+
+<div class="page-header">
+
+<div>
+
+<h3>
+<i class="fa-solid fa-credit-card"></i>
+Payment Management
+</h3>
+
+<p>
+Review, approve, reject and manage registration payments
+</p>
+
+</div>
+
+</div>
+
+<div class="panel">
+
+<div class="panel-body">
+
+<div class="filters">
+
+<div class="field">
+
+<label>Status</label>
+
+<select id="paymentStatusFilter">
+
+<option value="">All</option>
+<option value="Pending">Pending</option>
+<option value="Approved">Approved</option>
+<option value="Rejected">Rejected</option>
+
+</select>
+
+</div>
+
+<div class="field">
+
+<label>Payment Method</label>
+
+<select id="paymentMethodFilter">
+
+<option value="">All</option>
+<option value="bKash">bKash</option>
+<option value="Nagad">Nagad</option>
+<option value="Rocket">Rocket</option>
+<option value="Bank">Bank</option>
+<option value="Cash">Cash</option>
+
+</select>
+
+</div>
+
+<div class="field">
+
+<label>Batch</label>
+
+<select id="paymentBatchFilter">
+
+<option value="">
+All Batch
+</option>
+
+</select>
+
+</div>
+
+<div class="field">
+
+<label>Search</label>
+
+<input
+id="paymentSearch"
+placeholder="Name / ID / Transaction">
+
+</div>
+
+</div>
+
+<div class="action-row"
+style="margin-bottom:12px">
+
+<button
+class="btn btn-primary"
+onclick="renderPayments()">
+
+<i class="fa-solid fa-filter"></i>
+Filter
+
+</button>
+
+<button
+class="btn btn-gold"
+onclick="downloadPaymentsCSV()">
+
+<i class="fa-solid fa-download"></i>
+Download
+
+</button>
+
+</div>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Name</th>
+<th>Member ID</th>
+<th>Batch</th>
+<th>Category</th>
+<th>Method</th>
+<th>Amount</th>
+<th>Transaction ID</th>
+<th>Mobile/Account</th>
+<th>Status</th>
+<th>Actions</th>
+
+</tr>
+
+</thead>
+
+<tbody id="paymentTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- =====================================================
+     BATCH
+===================================================== -->
+
+<section class="page" id="page-batch">
+
+<div class="page-header">
+
+<div>
+
+<h3>
+<i class="fa-solid fa-layer-group"></i>
+Batch Management
+</h3>
+
+<p>
+Category-wise and batch-wise registration information
+</p>
+
+</div>
+
+</div>
+
+<div id="batchContainer"></div>
+
+</section>
+
+<!-- =====================================================
+     ID CARDS
+===================================================== -->
+
+<section class="page" id="page-idcards">
+
+<div class="page-header">
+
+<div>
+
+<h3>
+<i class="fa-solid fa-id-card"></i>
+ID Card Management
+</h3>
+
+<p>
+Category → Batch → Approved Members → Preview / Download / Print
+</p>
+
+</div>
+
+</div>
+
+<div class="panel">
+
+<div class="panel-body">
+
+<div class="filters">
+
+<div class="field">
+
+<label>Category</label>
+
+<select id="idCategory">
+
+<option value="">
+All Categories
+</option>
+
+<option value="EX-STUDENT">
+EX-STUDENT
+</option>
+
+<option value="CURRENT STUDENT">
+CURRENT STUDENT
+</option>
+
+<option value="FAMILY">
+FAMILY
+</option>
+
+</select>
+
+</div>
+
+<div class="field">
+
+<label>Batch / Class</label>
+
+<select id="idBatch">
+
+<option value="">
+All Batch / Class
+</option>
+
+</select>
+
+</div>
+
+<div class="field">
+
+<label>Member Search</label>
+
+<input
+id="idSearch"
+placeholder="Name / Member ID">
+
+</div>
+
+</div>
+
+<div class="action-row">
+
+<button
+class="btn btn-primary"
+onclick="renderIdCards()">
+
+<i class="fa-solid fa-magnifying-glass"></i>
+Show Members
+
+</button>
+
+<button
+class="btn btn-gold"
+onclick="previewSelectedIdCards()">
+
+<i class="fa-solid fa-eye"></i>
+Preview
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="panel">
+
+<div class="panel-head">
+
+<div class="panel-title">
+
+<i class="fa-solid fa-list-check"></i>
+Approved Members
+
+</div>
+
+<span id="idCountLabel">
+0 members
+</span>
+
+</div>
+
+<div class="panel-body">
+
+<div id="idCardList"></div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- =====================================================
+     FOOD
+===================================================== -->
+
+<section class="page" id="page-food">
+
+<div class="page-header">
+
+<div>
+
+<h3>
+<i class="fa-solid fa-utensils"></i>
+Food Token Management
+</h3>
+
+<p>
+Batch-wise 4×3 inch food token with QR code
+</p>
+
+</div>
+
+</div>
+
+<div class="panel">
+
+<div class="panel-body">
+
+<div class="filters">
+
+<div class="field">
+
+<label>Category</label>
+
+<select id="foodCategory">
+
+<option value="">
+All Categories
+</option>
+
+<option value="EX-STUDENT">
+EX-STUDENT
+</option>
+
+<option value="CURRENT STUDENT">
+CURRENT STUDENT
+</option>
+
+<option value="FAMILY">
+FAMILY
+</option>
+
+</select>
+
+</div>
+
+<div class="field">
+
+<label>Batch / Class</label>
+
+<select id="foodBatch">
+
+<option value="">
+All Batch / Class
+</option>
+
+</select>
+
+</div>
+
+<div class="field">
+
+<label>Search</label>
+
+<input
+id="foodSearch"
+placeholder="Name / Member ID">
+
+</div>
+
+</div>
+
+<div class="action-row">
+
+<button
+class="btn btn-primary"
+onclick="renderFoodMembers()">
+
+<i class="fa-solid fa-filter"></i>
+Show Approved Members
+
+</button>
+
+<button
+class="btn btn-gold"
+onclick="previewFoodTokens()">
+
+<i class="fa-solid fa-eye"></i>
+Batch Preview
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="panel">
+
+<div class="panel-body">
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Select</th>
+<th>Name</th>
+<th>Member ID</th>
+<th>Batch</th>
+<th>Category</th>
+<th>Status</th>
+<th>Actions</th>
+
+</tr>
+
+</thead>
+
+<tbody id="foodTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- =====================================================
+     ATTENDANCE
+===================================================== -->
+
+<section class="page" id="page-attendance">
+
+<div class="page-header">
+
+<div>
+
+<h3>
+<i class="fa-solid fa-user-check"></i>
+Attendance
+</h3>
+
+<p>
+Registration and food collection overview
+</p>
+
+</div>
+
+</div>
+
+<div class="stats-grid">
+
+<div class="stat-card">
+
+<div class="stat-icon">
+<i class="fa-solid fa-users"></i>
+</div>
+
+<div class="stat-number" id="attTotal">
+0
+</div>
+
+<div class="stat-label">
+Approved Members
+</div>
+
+</div>
+
+<div class="stat-card">
+
+<div class="stat-icon">
+<i class="fa-solid fa-utensils"></i>
+</div>
+
+<div class="stat-number" id="foodIssued">
+0
+</div>
+
+<div class="stat-label">
+Food Token Eligible
+</div>
+
+</div>
+
+<div class="stat-card">
+
+<div class="stat-icon">
+<i class="fa-solid fa-person"></i>
+</div>
+
+<div class="stat-number" id="attMale">
+0
+</div>
+
+<div class="stat-label">
+Male
+</div>
+
+</div>
+
+<div class="stat-card">
+
+<div class="stat-icon">
+<i class="fa-solid fa-person-dress"></i>
+</div>
+
+<div class="stat-number" id="attFemale">
+0
+</div>
+
+<div class="stat-label">
+Female
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- =====================================================
+     MAGAZINE
+===================================================== -->
+
+<section class="page" id="page-magazine">
+
+<div class="page-header">
+
+<div>
+
+<h3>
+<i class="fa-solid fa-book-open"></i>
+Magazine Management
+</h3>
+
+<p>
+Member Photo Bank + Batch-wise Writing and Photo Management
+</p>
+
+</div>
+
+</div>
+
+<!-- =====================================================
+     MEMBER PHOTO BANK
+===================================================== -->
+
+<div class="panel">
+
+<div class="panel-head">
+
+<div class="panel-title">
+
+<i class="fa-solid fa-images"></i>
+
+Member Photo Bank
+
+</div>
+
+<span id="memberPhotoBankCount">
+0 photos
+</span>
+
+</div>
+
+<div class="panel-body">
+
+<div class="filters">
+
+<div class="field">
+
+<label>
+Batch / Class
+</label>
+
+<select id="memberPhotoBankBatch">
+
+<option value="">
+All Batch / Class
+</option>
+
+</select>
+
+</div>
+
+<div class="field">
+
+<label>
+Search Member
+</label>
+
+<input
+id="memberPhotoBankSearch"
+placeholder="Name / Member ID / Batch">
+
+</div>
+
+</div>
+
+<div class="action-row">
+
+<button
+class="btn btn-primary"
+onclick="renderMemberPhotoBank()">
+
+<i class="fa-solid fa-filter"></i>
+
+Show Photos
+
+</button>
+
+<button
+class="btn btn-gold"
+onclick="previewMemberPhotoBank()">
+
+<i class="fa-solid fa-print"></i>
+
+Batch Preview / Print
+
+</button>
+
+<button
+class="btn btn-blue"
+onclick="downloadMemberPhotoBank()">
+
+<i class="fa-solid fa-file-pdf"></i>
+
+Save PDF
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<div
+id="memberPhotoBankContainer"
+class="mag-grid">
+
+</div>
+
+<!-- =====================================================
+     MAGAZINE SUBMISSIONS
+===================================================== -->
+
+<div class="panel">
+
+<div class="panel-body">
+
+<div class="mag-tabs">
+
+<button
+class="mag-tab active"
+data-mag="all">
+
+<i class="fa-solid fa-layer-group"></i>
+
+All
+
+</button>
+
+<button
+class="mag-tab"
+data-mag="writing">
+
+<i class="fa-solid fa-pen-nib"></i>
+
+Writing
+
+</button>
+
+<button
+class="mag-tab"
+data-mag="photo">
+
+<i class="fa-solid fa-camera"></i>
+
+Photos
+
+</button>
+
+</div>
+
+<div class="filters">
+
+<div class="field">
+
+<label>
+Batch
+</label>
+
+<select id="magBatch">
+
+<option value="">
+All Batches
+</option>
+
+</select>
+
+</div>
+
+<div class="field">
+
+<label>
+Status
+</label>
+
+<select id="magStatus">
+
+<option value="">
+All
+</option>
+
+<option value="Pending">
+Pending
+</option>
+
+<option value="Approved">
+Approved
+</option>
+
+<option value="Rejected">
+Rejected
+</option>
+
+</select>
+
+</div>
+
+<div class="field">
+
+<label>
+Search
+</label>
+
+<input
+id="magSearch"
+placeholder="Name / title / member ID">
+
+</div>
+
+</div>
+
+<div class="action-row">
+
+<button
+class="btn btn-primary"
+onclick="renderMagazine()">
+
+<i class="fa-solid fa-filter"></i>
+
+Filter
+
+</button>
+
+<button
+class="btn btn-gold"
+onclick="previewMagazineFiltered()">
+
+<i class="fa-solid fa-print"></i>
+
+Batch / Category Preview
+
+</button>
+
+<button
+class="btn btn-blue"
+onclick="downloadMagazineCSV()">
+
+<i class="fa-solid fa-download"></i>
+
+Download List
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<div
+id="magazineContainer"
+class="mag-grid">
+
+</div>
+
+</section>
+
+<!-- =====================================================
+     REPORTS
+===================================================== -->
+
+<section class="page" id="page-reports">
+
+<div class="page-header">
+
+<div>
+
+<h3>
+<i class="fa-solid fa-chart-column"></i>
+Reports
+</h3>
+
+<p>
+Batch, payment and T-shirt reports
+</p>
+
+</div>
+
+<button
+class="btn btn-gold"
+onclick="downloadReportCSV()">
+
+<i class="fa-solid fa-download"></i>
+
+Download Report
+
+</button>
+
+</div>
+
+<div class="panel">
+
+<div class="panel-head">
+
+<div class="panel-title">
+
+<i class="fa-solid fa-money-bill-transfer"></i>
+
+Payment Method Summary
+
+</div>
+
+</div>
+
+<div class="panel-body">
+
+<div class="stats-grid">
+
+<div class="stat-card">
+
+<div class="stat-icon">
+<i class="fa-solid fa-mobile-screen"></i>
+</div>
+
+<div class="stat-number" id="bkashTotal">
+৳0
+</div>
+
+<div class="stat-label">
+bKash
+</div>
+
+</div>
+
+<div class="stat-card">
+
+<div class="stat-icon">
+<i class="fa-solid fa-mobile-screen"></i>
+</div>
+
+<div class="stat-number" id="nagadTotal">
+৳0
+</div>
+
+<div class="stat-label">
+Nagad
+</div>
+
+</div>
+
+<div class="stat-card">
+
+<div class="stat-icon">
+<i class="fa-solid fa-mobile-screen"></i>
+</div>
+
+<div class="stat-number" id="rocketTotal">
+৳0
+</div>
+
+<div class="stat-label">
+Rocket
+</div>
+
+</div>
+
+<div class="stat-card">
+
+<div class="stat-icon">
+<i class="fa-solid fa-building-columns"></i>
+</div>
+
+<div class="stat-number" id="bankTotal">
+৳0
+</div>
+
+<div class="stat-label">
+Bank
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="panel">
+
+<div class="panel-head">
+
+<div class="panel-title">
+
+<i class="fa-solid fa-shirt"></i>
+
+T-Shirt Size Report
+
+</div>
+
+</div>
+
+<div class="panel-body">
+
+<div class="shirt-grid">
+
+<div class="shirt">
+<strong id="reportS">0</strong>
+<span>S</span>
+</div>
+
+<div class="shirt">
+<strong id="reportM">0</strong>
+<span>M</span>
+</div>
+
+<div class="shirt">
+<strong id="reportL">0</strong>
+<span>L</span>
+</div>
+
+<div class="shirt">
+<strong id="reportXL">0</strong>
+<span>XL</span>
+</div>
+
+<div class="shirt">
+<strong id="reportXXL">0</strong>
+<span>XXL</span>
+</div>
+
+<div class="shirt">
+<strong id="reportXXXL">0</strong>
+<span>XXXL</span>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="panel">
+
+<div class="panel-head">
+
+<div class="panel-title">
+
+<i class="fa-solid fa-layer-group"></i>
+
+Batch-wise Report
+
+</div>
+
+</div>
+
+<div class="panel-body">
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Category</th>
+<th>Batch/Class</th>
+<th>Total</th>
+<th>Approved</th>
+<th>Pending</th>
+<th>Rejected</th>
+<th>Total Amount</th>
+
+</tr>
+
+</thead>
+
+<tbody id="reportBatchTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- =====================================================
+     DUSTBIN
+===================================================== -->
+
+<section class="page" id="page-dustbin">
+
+<div class="page-header">
+
+<div>
+
+<h3>
+<i class="fa-solid fa-trash-can"></i>
+Dustbin
+</h3>
+
+<p>
+Deleted information can be restored or permanently deleted
+</p>
+
+</div>
+
+</div>
+
+<div class="panel">
+
+<div class="panel-head">
+
+<div class="panel-title">
+
+<i class="fa-solid fa-users"></i>
+
+Deleted Members
+
+</div>
+
+</div>
+
+<div class="panel-body">
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Name</th>
+<th>Member ID</th>
+<th>Category</th>
+<th>Batch</th>
+<th>Deleted At</th>
+<th>Actions</th>
+
+</tr>
+
+</thead>
+
+<tbody id="trashTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="panel">
+
+<div class="panel-head">
+
+<div class="panel-title">
+
+<i class="fa-solid fa-book-open"></i>
+
+Deleted Magazine
+
+</div>
+
+</div>
+
+<div class="panel-body">
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Type</th>
+<th>Title</th>
+<th>Sender</th>
+<th>Batch</th>
+<th>Deleted At</th>
+<th>Actions</th>
+
+</tr>
+
+</thead>
+
+<tbody id="magTrashTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+</div>
+
+</main>
+
+</div>
+
+<!-- =====================================================
+     MODAL
+===================================================== -->
+
+<div class="modal" id="modal">
+
+<div class="modal-box">
+
+<div class="modal-head">
+
+<h3 id="modalTitle">
+Details
+</h3>
+
+<button
+class="modal-close"
+onclick="closeModal()">
+
+<i class="fa-solid fa-xmark"></i>
+
+</button>
+
+</div>
+
+<div
+class="modal-body"
+id="modalBody">
+
+</div>
+
+<div
+class="modal-actions"
+id="modalActions">
+
+</div>
+
+</div>
+
+</div>
+
+<!-- =====================================================
+     TOAST
+===================================================== -->
+
+<div
+class="toast"
+id="toast">
+</div>
+
+<!-- =====================================================
+     ADMIN JS
+===================================================== -->
+
+<script src="admin.js"></script>
+
+</body>
+</html>
