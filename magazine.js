@@ -4,6 +4,14 @@
    PAHARCHANDA HIGH SCHOOL
    ALUMNI MAGAZINE SUBMISSION
    GRAND REUNION 2027
+
+   FIXED VERSION
+   - Correct bucket: magazine-photos
+   - Reliable image preview
+   - Reliable image loading
+   - Photo path + URL saved correctly
+   - Multiple photo upload
+   - 200 KB target compression
 ========================================================= */
 
 
@@ -25,8 +33,12 @@ const SUPABASE_KEY =
 const TABLE_NAME =
     "magazine_submissions";
 
+/*
+   IMPORTANT:
+   Magazine photos must use magazine-photos bucket.
+*/
 const BUCKET_NAME =
-    "magazine-files";
+    "magazine-photos";
 
 
 /* =========================================================
@@ -151,7 +163,12 @@ const progressPercent =
    MESSAGE
 ========================================================= */
 
-function showMessage(text, type = "error") {
+function showMessage(
+    text,
+    type = "error"
+) {
+
+    if (!message) return;
 
     message.textContent =
         text;
@@ -168,7 +185,10 @@ function showMessage(text, type = "error") {
 
 function clearMessage() {
 
-    message.textContent = "";
+    if (!message) return;
+
+    message.textContent =
+        "";
 
     message.className =
         "message";
@@ -179,15 +199,25 @@ function clearMessage() {
    PROGRESS
 ========================================================= */
 
-function setProgress(percent, text) {
+function setProgress(
+    percent,
+    text
+) {
+
+    if (!progressWrap) return;
 
     percent =
         Math.max(
             0,
-            Math.min(100, percent)
+            Math.min(
+                100,
+                percent
+            )
         );
 
-    progressWrap.classList.add("show");
+    progressWrap.classList.add(
+        "show"
+    );
 
     progressFill.style.width =
         percent + "%";
@@ -196,13 +226,18 @@ function setProgress(percent, text) {
         Math.round(percent) + "%";
 
     progressText.textContent =
-        text || "প্রস্তুত হচ্ছে...";
+        text ||
+        "প্রস্তুত হচ্ছে...";
 }
 
 
 function hideProgress() {
 
-    progressWrap.classList.remove("show");
+    if (!progressWrap) return;
+
+    progressWrap.classList.remove(
+        "show"
+    );
 
     progressFill.style.width =
         "0%";
@@ -213,7 +248,9 @@ function hideProgress() {
    SUBMISSION TYPE
 ========================================================= */
 
-function setSubmissionType(type) {
+function setSubmissionType(
+    type
+) {
 
     submissionType =
         type;
@@ -253,20 +290,22 @@ document
     .querySelectorAll(
         'input[name="submissionType"]'
     )
-    .forEach(radio => {
+    .forEach(
+        radio => {
 
-        radio.addEventListener(
-            "change",
-            function () {
+            radio.addEventListener(
+                "change",
+                function() {
 
-                setSubmissionType(
-                    this.value
-                );
+                    setSubmissionType(
+                        this.value
+                    );
 
-            }
-        );
+                }
+            );
 
-    });
+        }
+    );
 
 
 /* =========================================================
@@ -274,76 +313,101 @@ document
 ========================================================= */
 
 document
-    .querySelectorAll(".category")
-    .forEach(button => {
+    .querySelectorAll(
+        ".category"
+    )
+    .forEach(
+        button => {
 
-        button.addEventListener(
-            "click",
-            function () {
+            button.addEventListener(
+                "click",
+                function() {
 
-                document
-                    .querySelectorAll(".category")
-                    .forEach(item =>
-                        item.classList.remove("active")
+                    document
+                        .querySelectorAll(
+                            ".category"
+                        )
+                        .forEach(
+                            item =>
+                                item.classList.remove(
+                                    "active"
+                                )
+                        );
+
+                    this.classList.add(
+                        "active"
                     );
 
-                this.classList.add("active");
+                    selectedCategory =
+                        this.textContent.trim();
 
-                selectedCategory =
-                    this.textContent.trim();
+                    updateFinalReview();
 
-                updateFinalReview();
+                }
+            );
 
-            }
-        );
-
-    });
+        }
+    );
 
 
 /* =========================================================
    FILE INPUT
 ========================================================= */
 
-photoFile.addEventListener(
-    "change",
-    function () {
+if (photoFile) {
 
-        if (
-            !this.files ||
-            this.files.length === 0
-        ) {
-            return;
+    photoFile.addEventListener(
+        "change",
+        function() {
+
+            if (
+                !this.files ||
+                this.files.length === 0
+            ) {
+                return;
+            }
+
+            addNewPhotos(
+                Array.from(
+                    this.files
+                )
+            );
+
         }
+    );
 
-        addNewPhotos(
-            Array.from(this.files)
-        );
-
-    }
-);
+}
 
 
 /* =========================================================
    ADD MORE
 ========================================================= */
 
-addMoreBtn.addEventListener(
-    "click",
-    function () {
+if (addMoreBtn) {
 
-        photoFile.click();
+    addMoreBtn.addEventListener(
+        "click",
+        function() {
 
-    }
-);
+            photoFile.click();
+
+        }
+    );
+
+}
 
 
 /* =========================================================
-   ADD PHOTOS
+   VALID IMAGE
 ========================================================= */
 
-function addNewPhotos(files) {
+function isValidImage(
+    file
+) {
 
-    clearMessage();
+    if (!file) {
+        return false;
+    }
 
     const allowedTypes = [
         "image/jpeg",
@@ -352,14 +416,47 @@ function addNewPhotos(files) {
         "image/webp"
     ];
 
+    const type =
+        String(
+            file.type || ""
+        ).toLowerCase();
+
+    if (
+        allowedTypes.includes(
+            type
+        )
+    ) {
+        return true;
+    }
+
+    const name =
+        String(
+            file.name || ""
+        ).toLowerCase();
+
+    return /\.(jpg|jpeg|png|webp)$/i
+        .test(name);
+}
+
+
+/* =========================================================
+   ADD PHOTOS
+========================================================= */
+
+function addNewPhotos(
+    files
+) {
+
+    clearMessage();
+
     let added = 0;
 
-    for (const file of files) {
+    for (
+        const file of files
+    ) {
 
         if (
-            !allowedTypes.includes(
-                file.type.toLowerCase()
-            )
+            !isValidImage(file)
         ) {
 
             showMessage(
@@ -384,10 +481,14 @@ function addNewPhotos(files) {
 
 
         const duplicate =
-            selectedFiles.some(item =>
-                item.name === file.name &&
-                item.size === file.size &&
-                item.lastModified === file.lastModified
+            selectedFiles.some(
+                item =>
+                    item.name ===
+                        file.name &&
+                    item.size ===
+                        file.size &&
+                    item.lastModified ===
+                        file.lastModified
             );
 
 
@@ -396,13 +497,18 @@ function addNewPhotos(files) {
         }
 
 
-        selectedFiles.push(file);
+        selectedFiles.push(
+            file
+        );
 
         added++;
+
     }
 
 
-    photoFile.value = "";
+    photoFile.value =
+        "";
+
 
     renderPhotoReview();
 
@@ -410,9 +516,7 @@ function addNewPhotos(files) {
 
 
     if (added > 0) {
-
         clearMessage();
-
     }
 
 }
@@ -420,11 +524,15 @@ function addNewPhotos(files) {
 
 /* =========================================================
    PHOTO PREVIEW
+   Object URL is more reliable than FileReader
 ========================================================= */
 
 function renderPhotoReview() {
 
-    previewGrid.innerHTML = "";
+    if (!previewGrid) return;
+
+    previewGrid.innerHTML =
+        "";
 
     reviewCount.textContent =
         `${selectedFiles.length} টি ছবি`;
@@ -436,20 +544,33 @@ function renderPhotoReview() {
 
 
     selectedFiles.forEach(
-        (file, index) => {
+        (
+            file,
+            index
+        ) => {
 
             const card =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
             card.className =
                 "photo-card";
 
 
             const img =
-                document.createElement("img");
+                document.createElement(
+                    "img"
+                );
+
+            img.alt =
+                file.name;
+
 
             const remove =
-                document.createElement("button");
+                document.createElement(
+                    "button"
+                );
 
             remove.type =
                 "button";
@@ -464,9 +585,41 @@ function renderPhotoReview() {
                 "ছবি বাদ দিন";
 
 
+            const objectUrl =
+                URL.createObjectURL(
+                    file
+                );
+
+            img.src =
+                objectUrl;
+
+
+            img.onload =
+                function() {
+
+                    URL.revokeObjectURL(
+                        objectUrl
+                    );
+
+                };
+
+
+            img.onerror =
+                function() {
+
+                    URL.revokeObjectURL(
+                        objectUrl
+                    );
+
+                    img.alt =
+                        "ছবি দেখা যাচ্ছে না";
+
+                };
+
+
             remove.addEventListener(
                 "click",
-                function () {
+                function() {
 
                     selectedFiles.splice(
                         index,
@@ -481,27 +634,17 @@ function renderPhotoReview() {
             );
 
 
-            const reader =
-                new FileReader();
+            card.appendChild(
+                img
+            );
 
+            card.appendChild(
+                remove
+            );
 
-            reader.onload =
-                function (event) {
-
-                    img.src =
-                        event.target.result;
-
-                };
-
-
-            reader.readAsDataURL(file);
-
-
-            card.appendChild(img);
-
-            card.appendChild(remove);
-
-            previewGrid.appendChild(card);
+            previewGrid.appendChild(
+                card
+            );
 
         }
     );
@@ -511,63 +654,87 @@ function renderPhotoReview() {
 
 /* =========================================================
    IMAGE LOAD
+   Object URL based
 ========================================================= */
 
-function loadImageFromFile(file) {
+function loadImageFromFile(
+    file
+) {
 
     return new Promise(
-        (resolve, reject) => {
+        (
+            resolve,
+            reject
+        ) => {
 
-            const reader =
-                new FileReader();
+            if (!file) {
 
+                reject(
+                    new Error(
+                        "কোনো ছবি পাওয়া যায়নি।"
+                    )
+                );
 
-            reader.onload =
-                function () {
-
-                    const img =
-                        new Image();
-
-
-                    img.onload =
-                        function () {
-
-                            resolve(img);
-
-                        };
+                return;
+            }
 
 
-                    img.onerror =
-                        function () {
+            let objectUrl;
 
-                            reject(
-                                new Error(
-                                    "Could not read the photo."
-                                )
-                            );
+            try {
 
-                        };
+                objectUrl =
+                    URL.createObjectURL(
+                        file
+                    );
+
+            }
+            catch (error) {
+
+                reject(
+                    new Error(
+                        "ছবিটি access করা যাচ্ছে না।"
+                    )
+                );
+
+                return;
+            }
 
 
-                    img.src =
-                        reader.result;
+            const img =
+                new Image();
+
+
+            img.onload =
+                function() {
+
+                    URL.revokeObjectURL(
+                        objectUrl
+                    );
+
+                    resolve(img);
 
                 };
 
 
-            reader.onerror =
-                function () {
+            img.onerror =
+                function() {
+
+                    URL.revokeObjectURL(
+                        objectUrl
+                    );
 
                     reject(
                         new Error(
-                            "Could not read the photo."
+                            "ছবিটি পড়া যাচ্ছে না। একটি valid JPG, PNG অথবা WebP দিন।"
                         )
                     );
 
                 };
 
 
-            reader.readAsDataURL(file);
+            img.src =
+                objectUrl;
 
         }
     );
@@ -585,10 +752,44 @@ function canvasToBlob(
 ) {
 
     return new Promise(
-        resolve => {
+        (
+            resolve,
+            reject
+        ) => {
+
+            if (
+                !canvas ||
+                typeof canvas.toBlob !==
+                    "function"
+            ) {
+
+                reject(
+                    new Error(
+                        "আপনার browser photo compression support করছে না।"
+                    )
+                );
+
+                return;
+            }
+
 
             canvas.toBlob(
-                blob => resolve(blob),
+                blob => {
+
+                    if (!blob) {
+
+                        reject(
+                            new Error(
+                                "ছবি compress করা যায়নি।"
+                            )
+                        );
+
+                        return;
+                    }
+
+                    resolve(blob);
+
+                },
                 "image/jpeg",
                 quality
             );
@@ -603,10 +804,14 @@ function canvasToBlob(
    COMPRESS IMAGE
 ========================================================= */
 
-async function compressImage(file) {
+async function compressImage(
+    file
+) {
 
     const img =
-        await loadImageFromFile(file);
+        await loadImageFromFile(
+            file
+        );
 
 
     let width =
@@ -616,6 +821,18 @@ async function compressImage(file) {
     let height =
         img.naturalHeight ||
         img.height;
+
+
+    if (
+        !width ||
+        !height
+    ) {
+
+        throw new Error(
+            "ছবির dimension পাওয়া যাচ্ছে না।"
+        );
+
+    }
 
 
     const scale =
@@ -629,13 +846,17 @@ async function compressImage(file) {
     width =
         Math.max(
             1,
-            Math.round(width * scale)
+            Math.round(
+                width * scale
+            )
         );
 
     height =
         Math.max(
             1,
-            Math.round(height * scale)
+            Math.round(
+                height * scale
+            )
         );
 
 
@@ -660,8 +881,9 @@ async function compressImage(file) {
     ) {
 
         const canvas =
-            document.createElement("canvas");
-
+            document.createElement(
+                "canvas"
+            );
 
         canvas.width =
             width;
@@ -677,6 +899,32 @@ async function compressImage(file) {
                     alpha: false
                 }
             );
+
+
+        if (!ctx) {
+
+            throw new Error(
+                "Photo processing unavailable."
+            );
+
+        }
+
+
+        /*
+           White background prevents
+           transparent PNG background
+           problems after JPEG conversion.
+        */
+
+        ctx.fillStyle =
+            "#ffffff";
+
+        ctx.fillRect(
+            0,
+            0,
+            width,
+            height
+        );
 
 
         ctx.drawImage(
@@ -699,13 +947,9 @@ async function compressImage(file) {
                 );
 
 
-            if (!blob) {
-                continue;
-            }
-
-
             if (
-                blob.size <= TARGET_SIZE
+                blob.size <=
+                TARGET_SIZE
             ) {
 
                 return new File(
@@ -727,22 +971,30 @@ async function compressImage(file) {
         width =
             Math.max(
                 400,
-                Math.round(width * 0.82)
+                Math.round(
+                    width * 0.82
+                )
             );
 
         height =
             Math.max(
                 400,
-                Math.round(height * 0.82)
+                Math.round(
+                    height * 0.82
+                )
             );
 
     }
 
 
-    /* Final fallback */
+    /* =====================================================
+       FINAL FALLBACK
+    ===================================================== */
 
     const canvas =
-        document.createElement("canvas");
+        document.createElement(
+            "canvas"
+        );
 
     canvas.width =
         width;
@@ -752,7 +1004,21 @@ async function compressImage(file) {
 
 
     const ctx =
-        canvas.getContext("2d");
+        canvas.getContext(
+            "2d"
+        );
+
+
+    ctx.fillStyle =
+        "#ffffff";
+
+    ctx.fillRect(
+        0,
+        0,
+        width,
+        height
+    );
+
 
     ctx.drawImage(
         img,
@@ -814,7 +1080,9 @@ async function uploadPhoto(
 
 
     const compressed =
-        await compressImage(file);
+        await compressImage(
+            file
+        );
 
 
     if (
@@ -835,6 +1103,10 @@ async function uploadPhoto(
             .substring(2, 9);
 
 
+    /*
+       Stable and easy-to-find path.
+    */
+
     const path =
         `submissions/${Date.now()}_${randomPart}_${index}.jpg`;
 
@@ -844,15 +1116,19 @@ async function uploadPhoto(
     } =
         await supabaseClient
             .storage
-            .from(BUCKET_NAME)
+            .from(
+                BUCKET_NAME
+            )
             .upload(
                 path,
                 compressed,
                 {
                     cacheControl:
                         "31536000",
+
                     upsert:
                         false,
+
                     contentType:
                         "image/jpeg"
                 }
@@ -864,20 +1140,45 @@ async function uploadPhoto(
     }
 
 
+    /*
+       Public URL.
+       The bucket must be PUBLIC.
+    */
+
     const {
         data
     } =
         supabaseClient
             .storage
-            .from(BUCKET_NAME)
-            .getPublicUrl(path);
+            .from(
+                BUCKET_NAME
+            )
+            .getPublicUrl(
+                path
+            );
+
+
+    const publicUrl =
+        data?.publicUrl || "";
+
+
+    if (!publicUrl) {
+
+        throw new Error(
+            "ছবির Public URL তৈরি করা যায়নি।"
+        );
+
+    }
 
 
     return {
+
         path:
             path,
+
         url:
-            data.publicUrl
+            publicUrl
+
     };
 
 }
@@ -1017,7 +1318,8 @@ function updateFinalReview() {
     document.getElementById(
         "reviewCategory"
     ).textContent =
-        submissionType === "Writing"
+        submissionType ===
+            "Writing"
             ? selectedCategory
             : "—";
 
@@ -1025,7 +1327,8 @@ function updateFinalReview() {
     document.getElementById(
         "reviewTitle"
     ).textContent =
-        submissionType === "Writing"
+        submissionType ===
+            "Writing"
             ? (
                 titleInput.value.trim() ||
                 "—"
@@ -1051,6 +1354,8 @@ function updateFinalReview() {
     titleInput
 ].forEach(
     element => {
+
+        if (!element) return;
 
         element.addEventListener(
             "input",
@@ -1124,9 +1429,12 @@ async function submitForm() {
                 error
             } =
                 await supabaseClient
-                    .from(TABLE_NAME)
+                    .from(
+                        TABLE_NAME
+                    )
                     .insert([
                         {
+
                             name:
                                 name,
 
@@ -1150,16 +1458,23 @@ async function submitForm() {
                                 selectedCategory,
 
                             photo_path:
-                                JSON.stringify([]),
+                                JSON.stringify(
+                                    []
+                                ),
 
                             photo_url:
-                                JSON.stringify([]),
+                                JSON.stringify(
+                                    []
+                                ),
 
                             file_url:
-                                JSON.stringify([]),
+                                JSON.stringify(
+                                    []
+                                ),
 
                             status:
                                 "Pending"
+
                         }
                     ]);
 
@@ -1198,7 +1513,8 @@ async function submitForm() {
         );
 
 
-        const uploadedUrls = [];
+        const uploadedUrls =
+            [];
 
 
         for (
@@ -1232,13 +1548,25 @@ async function submitForm() {
         );
 
 
+        /*
+           Save BOTH:
+           photo_path = Storage paths
+           photo_url  = public URLs
+           file_url   = public URLs
+
+           Admin can use either one.
+        */
+
         const {
             error
         } =
             await supabaseClient
-                .from(TABLE_NAME)
+                .from(
+                    TABLE_NAME
+                )
                 .insert([
                     {
+
                         name:
                             name,
 
@@ -1277,6 +1605,7 @@ async function submitForm() {
 
                         status:
                             "Pending"
+
                     }
                 ]);
 
@@ -1300,7 +1629,6 @@ async function submitForm() {
 
         resetForm();
 
-
     }
     catch (error) {
 
@@ -1310,8 +1638,8 @@ async function submitForm() {
         );
 
 
-        /* ================================================
-           CLEANUP UPLOADED FILES
+        /* =================================================
+           CLEANUP
         ================================================= */
 
         if (
@@ -1322,7 +1650,9 @@ async function submitForm() {
 
                 await supabaseClient
                     .storage
-                    .from(BUCKET_NAME)
+                    .from(
+                        BUCKET_NAME
+                    )
                     .remove(
                         uploadedPaths
                     );
@@ -1348,30 +1678,50 @@ async function submitForm() {
 
 
         if (
+            /bucket.*not found|not found/i
+                .test(
+                    errorText
+                )
+        ) {
+
+            errorText =
+                "magazine-photos Storage bucket পাওয়া যাচ্ছে না। Supabase Storage-এ bucketটির নাম magazine-photos আছে কিনা দেখুন।";
+
+        }
+
+        else if (
+            /row-level security|permission denied/i
+                .test(
+                    errorText
+                )
+        ) {
+
+            errorText =
+                "Database RLS policy submission অনুমতি দিচ্ছে না।";
+
+        }
+
+        else if (
+            /storage.objects|new row violates row-level security/i
+                .test(
+                    errorText
+                )
+        ) {
+
+            errorText =
+                "magazine-photos Storage policy upload অনুমতি দিচ্ছে না।";
+
+        }
+
+        else if (
             /compact jws|jwt|invalid api key/i
-                .test(errorText)
+                .test(
+                    errorText
+                )
         ) {
 
             errorText =
-                "Supabase authentication error। magazine.js-এর Publishable Key এবং Supabase Project URL সঠিক আছে কিনা পরীক্ষা করুন।";
-
-        }
-        else if (
-            /row-level security/i
-                .test(errorText)
-        ) {
-
-            errorText =
-                "Database Row Level Security (RLS) policy submission অনুমতি দিচ্ছে না।";
-
-        }
-        else if (
-            /storage.objects/i
-                .test(errorText)
-        ) {
-
-            errorText =
-                "Storage policy upload অনুমতি দিচ্ছে না।";
+                "Supabase authentication error। Project URL এবং Publishable Key পরীক্ষা করুন।";
 
         }
 
@@ -1432,9 +1782,14 @@ function resetForm() {
 
 
     document
-        .querySelectorAll(".category")
+        .querySelectorAll(
+            ".category"
+        )
         .forEach(
-            (item, index) => {
+            (
+                item,
+                index
+            ) => {
 
                 item.classList.toggle(
                     "active",
@@ -1452,8 +1807,10 @@ function resetForm() {
 
 
     if (writingRadio) {
+
         writingRadio.checked =
             true;
+
     }
 
 
@@ -1466,7 +1823,8 @@ function resetForm() {
 
 
     setTimeout(
-        () => hideProgress(),
+        () =>
+            hideProgress(),
         1500
     );
 
@@ -1485,7 +1843,7 @@ updateFinalReview();
 
 
 /* =========================================================
-   DEBUG CONFIG
+   DEBUG
 ========================================================= */
 
 console.log(
@@ -1495,6 +1853,16 @@ console.log(
 console.log(
     "Supabase URL:",
     SUPABASE_URL
+);
+
+console.log(
+    "Magazine table:",
+    TABLE_NAME
+);
+
+console.log(
+    "Magazine photo bucket:",
+    BUCKET_NAME
 );
 
 console.log(
