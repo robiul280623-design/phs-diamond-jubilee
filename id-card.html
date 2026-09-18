@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Paharchanda High School | Digital ID Card</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+<style>
+*{box-sizing:border-box}
+
+html,body{
+    margin:0;
+    padding:0;
+    background:#eef2f7;
+    font-family:Arial,Helvetica,sans-serif;
+    color:#172033;
+}
+
+.page{
+    width:100%;
+    padding:20px 12px 40px;
+}
+
+.search-box{
+    max-width:700px;
+    margin:0 auto 20px;
+    background:#fff;
+    padding:18px;
+    border-radius:16px;
+    box-shadow:0 8px 30px rgba(0,0,0,.08);
+}
+
+.search-box h2{
+    margin:0 0 5px;
+    text-align:center;
+    color:#0b1f46;
+    font-size:22px;
+}
+
+.search-box p{
+    margin:0 0 15px;
+    text-align:center;
+    color:#667085;
+    font-size:13px;
+}
+
+.search-row{
+    display:flex;
+    gap:8px;
+}
+
+.search-row input{
+    flex:1;
+    min-width:0;
+    height:46px;
+    border:1px solid #d0d5dd;
+    border-radius:10px;
+    padding:0 13px;
+    font-size:15px;
+    text-transform:uppercase;
+    outline:none;
+}
+
+.search-row button{
+    height:46px;
+    border:0;
+    border-radius:10px;
+    padding:0 18px;
+    background:#0b1f46;
+    color:#fff;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.message{
+    max-width:700px;
+    margin:0 auto 15px;
+    padding:12px 15px;
+    border-radius:10px;
+    text-align:center;
+    font-size:14px;
+    display:none;
+}
+
+.message.show{display:block}
+
+.message.error{
+    background:#fff0f0;
+    color:#b42318;
+    border:1px solid #fecdca;
+}
+
+.message.success{
+    background:#ecfdf3;
+    color:#027a48;
+    border:1px solid #abefc6;
+}
+
+.actions{
+    display:none;
+    max-width:700px;
+    margin:0 auto 20px;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.actions button{
+    border:0;
+    border-radius:9px;
+    padding:11px 15px;
+    background:#0b1f46;
+    color:white;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.actions button.secondary{background:#16794b}
+.actions button.dark{background:#344054}
+
+.cards-wrapper{
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    gap:18px;
+}
+
+/* =====================================================
+   CARD — 4 INCH WIDTH × 3 INCH HEIGHT
+===================================================== */
+
+.card{
+    position:relative;
+    width:4in;
+    height:3in;
+    min-width:4in;
+    min-height:3in;
+    max-width:4in;
+    max-height:3in;
+    background:#fff;
+    overflow:hidden;
+    border:1px solid #d7dce5;
+    border-radius:12px;
+    box-shadow:0 12px 35px rgba(0,0,0,.16);
+    color:#101828;
+}
+
+/* HEADER */
+
+.card-header{
+    position:absolute;
+    left:0;
+    right:0;
+    top:0;
+    height:.69in;
+    background:linear-gradient(
+        135deg,
+        #071b40 0%,
+        #0d2e67 55%,
+        #09224d 100%
+    );
+    color:#fff;
+    text-align:center;
+    padding-top:.075in;
+}
+
+.card-header::after{
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    height:2px;
+    background:linear-gradient(
+        90deg,
+        transparent,
+        #d7ad52,
+        #f4d78b,
+        #d7ad52,
+        transparent
+    );
+}
+
+.school-name{
+    font-size:12px;
+    font-weight:900;
+    letter-spacing:.9px;
+    line-height:1.1;
+}
+
+.jubilee{
+    margin-top:2px;
+    font-size:7px;
+    letter-spacing:.7px;
+    font-weight:700;
+    color:#f7d98b;
+}
+
+.reunion{
+    margin-top:2px;
+    font-size:7px;
+    letter-spacing:.8px;
+    font-weight:700;
+}
+
+.digital-title{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    margin-top:3px;
+    min-width:1.05in;
+    height:.20in;
+    padding:0 10px;
+    border:1px solid #e8c86d;
+    border-radius:20px;
+    background:rgba(255,255,255,.08);
+    color:#fff;
+    font-size:6.5px;
+    font-weight:900;
+    letter-spacing:.7px;
+}
+
+/* MAIN */
+
+.card-main{
+    position:absolute;
+    left:.12in;
+    right:.12in;
+    top:.78in;
+    bottom:.68in;
+    display:flex;
+    align-items:flex-start;
+    gap:.09in;
+}
+
+/* PHOTO */
+
+.photo-area{
+    width:.74in;
+    flex:0 0 .74in;
+    display:flex;
+    justify-content:center;
+}
+
+.photo-box{
+    width:.70in;
+    height:.88in;
+    border-radius:7px;
+    overflow:hidden;
+    border:2px solid #cba650;
+    background:#f3f5f8;
+    box-shadow:0 2px 8px rgba(0,0,0,.15);
+}
+
+.photo-box img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+/* INFO */
+
+.info-area{
+    flex:1;
+    min-width:0;
+    padding-top:1px;
+}
+
+.member-name{
+    font-size:10px;
+    line-height:1.15;
+    font-weight:900;
+    color:#0b1f46;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    margin-bottom:2px;
+}
+
+.member-id{
+    display:inline-block;
+    max-width:100%;
+    padding:2px 5px;
+    border-radius:4px;
+    background:#eef3fb;
+    color:#0b2b62;
+    font-size:6.7px;
+    font-weight:900;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    margin-bottom:3px;
+}
+
+.info-line{
+    display:flex;
+    font-size:6.4px;
+    line-height:1.28;
+    margin:1.5px 0;
+    color:#344054;
+}
+
+.info-label{
+    width:.52in;
+    flex:0 0 .52in;
+    font-weight:800;
+    color:#667085;
+}
+
+.info-value{
+    flex:1;
+    min-width:0;
+    font-weight:700;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+/* QR */
+
+.qr-area{
+    width:.78in;
+    flex:0 0 .78in;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding-top:13px;
+}
+
+.qr-box{
+    width:.76in;
+    height:.76in;
+    background:#fff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    border:1px solid #d0d5dd;
+    border-radius:5px;
+    padding:3px;
+    box-shadow:0 2px 6px rgba(0,0,0,.10);
+}
+
+.qr-box img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    display:block;
+}
+
+.qr-label{
+    margin-top:2px;
+    font-size:5.5px;
+    color:#667085;
+    font-weight:800;
+    letter-spacing:.3px;
+}
+
+/* VERIFIED */
+
+.card-bottom{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:.27in;
+    height:.43in;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:.09in;
+}
+
+.verified-seal{
+    position:relative;
+    width:.55in;
+    height:.55in;
+    flex:0 0 .55in;
+    border-radius:50%;
+    background:radial-gradient(
+        circle,
+        #ffffff 0 47%,
+        #e9f8ef 48% 100%
+    );
+    border:2px solid #16834d;
+    box-shadow:
+        0 2px 7px rgba(0,0,0,.16),
+        inset 0 0 0 2px #f3d47a;
+}
+
+.verified-seal::before{
+    content:"";
+    position:absolute;
+    inset:4px;
+    border-radius:50%;
+    border:1px dashed #16834d;
+}
+
+.verified-seal::after{
+    content:"";
+    position:absolute;
+    inset:7px;
+    border-radius:50%;
+    border:1px solid #e0b94f;
+}
+
+.seal-check{
+    position:absolute;
+    left:50%;
+    top:43%;
+    transform:translate(-50%,-50%);
+    color:#16834d;
+    font-size:14px;
+    line-height:1;
+    font-weight:900;
+    z-index:3;
+}
+
+.seal-word{
+    position:absolute;
+    left:50%;
+    top:64%;
+    transform:translate(-50%,-50%);
+    color:#16834d;
+    font-size:4.7px;
+    font-weight:900;
+    letter-spacing:.3px;
+    z-index:3;
+}
+
+.seal-year{
+    position:absolute;
+    left:50%;
+    top:80%;
+    transform:translate(-50%,-50%);
+    color:#b38318;
+    font-size:4px;
+    font-weight:900;
+    z-index:3;
+}
+
+.verified-info{
+    text-align:left;
+    line-height:1.1;
+}
+
+.verified-word{
+    color:#16834d;
+    font-size:10px;
+    font-weight:1000;
+    letter-spacing:.4px;
+}
+
+.verified-date{
+    margin-top:2px;
+    color:#667085;
+    font-size:5.7px;
+    font-weight:700;
+    white-space:nowrap;
+}
+
+.verified-status{
+    margin-top:2px;
+    color:#027a48;
+    font-size:5.5px;
+    font-weight:800;
+}
+
+/* FOOTER */
+
+.organised{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:.07in;
+    text-align:center;
+    font-size:5.4px;
+    color:#667085;
+    font-weight:700;
+    letter-spacing:.15px;
+}
+
+.organised span{
+    color:#0b1f46;
+}
+
+/* FOOD TOKEN */
+
+.food-title{
+    color:#b42318 !important;
+}
+
+.food-token-box{
+    display:inline-block;
+    margin-top:2px;
+    padding:2px 6px;
+    border-radius:5px;
+    background:#fff2f0;
+    border:1px solid #fecdca;
+    color:#b42318;
+    font-size:6px;
+    font-weight:900;
+    letter-spacing:.5px;
+}
+
+/*
+   Food Token has NO PHOTO.
+   Its content starts farther left
+   and QR stays on the right.
+*/
+
+.food-card .card-main{
+    left:.20in;
+    right:.20in;
+    top:.78in;
+    bottom:.68in;
+    gap:.12in;
+}
+
+.food-card .info-area{
+    flex:1;
+    padding-top:3px;
+}
+
+.food-card .qr-area{
+    width:.86in;
+    flex:0 0 .86in;
+    padding-top:18px;
+}
+
+.food-card .qr-box{
+    width:.80in;
+    height:.80in;
+}
+
+/* HIDDEN */
+
+.hidden{
+    display:none !important;
+}
+
+/* MOBILE */
+
+@media(max-width:430px){
+
+    .page{
+        padding:12px 6px 30px;
+    }
+
+    .card{
+        transform:scale(.88);
+        transform-origin:top center;
+        margin-bottom:-35px;
+    }
+}
+
+/* PRINT */
+
+@media print{
+
+    html,
+    body{
+        margin:0 !important;
+        padding:0 !important;
+        background:#fff !important;
+    }
+
+    .search-box,
+    .message,
+    .actions{
+        display:none !important;
+    }
+
+    .page{
+        padding:0 !important;
+        margin:0 !important;
+    }
+
+    .cards-wrapper{
+        display:flex !important;
+        width:4in !important;
+        margin:0 !important;
+        padding:0 !important;
+        gap:0 !important;
+        align-items:flex-start !important;
+    }
+
+    .card{
+        width:4in !important;
+        height:3in !important;
+        min-width:4in !important;
+        min-height:3in !important;
+        max-width:4in !important;
+        max-height:3in !important;
+        margin:0 !important;
+        border-radius:0 !important;
+        box-shadow:none !important;
+        page-break-after:always;
+        break-after:page;
+    }
+
+    .card:last-child{
+        page-break-after:auto;
+        break-after:auto;
+    }
+
+    @page{
+        size:4in 6in;
+        margin:0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <div class="search-box">
+
+        <h2>Digital ID Card</h2>
+
+        <p>
+            Enter your Member ID to view your approved ID Card
+        </p>
+
+        <div class="search-row">
+
+            <input
+                id="memberIdInput"
+                type="text"
+                placeholder="Example: PHS2A-DJ-2018-001"
+                autocomplete="off"
+            >
+
+            <button id="searchBtn">
+                Search
+            </button>
+
+        </div>
+
+    </div>
+
+    <div id="message" class="message"></div>
+
+    <div id="actions" class="actions">
+
+        <button id="pdfBtn">
+            Download PDF
+        </button>
+
+        <button id="imageBtn" class="secondary">
+            Download Image
+        </button>
+
+        <button id="printBtn" class="dark">
+            Print
+        </button>
+
+    </div>
+
+    <div id="cardsWrapper" class="cards-wrapper">
+
+        <!-- =================================================
+             ID CARD
+        ================================================== -->
+
+        <div id="idCard" class="card">
+
+            <div class="card-header">
+
+                <div class="school-name">
+                    ✦ PAHARCHANDA HIGH SCHOOL ✦
+                </div>
+
+                <div class="jubilee">
+                    DIAMOND JUBILEE 1965–2025
+                </div>
+
+                <div class="reunion">
+                    GRAND REUNION 2027
+                </div>
+
+                <div class="digital-title">
+                    DIGITAL ID CARD
+                </div>
+
+            </div>
+
+            <div class="card-main">
+
+                <div class="photo-area">
+
+                    <div class="photo-box">
+                        <img id="idPhoto" alt="Member Photo">
+                    </div>
+
+                </div>
+
+                <div class="info-area">
+
+                    <div id="idName" class="member-name">
+                        Member Name
+                    </div>
+
+                    <div id="idMemberId" class="member-id">
+                        PHS2A-DJ-0000-000
+                    </div>
+
+                    <div class="info-line">
+                        <div class="info-label">Category</div>
+                        <div id="idCategory" class="info-value">-</div>
+                    </div>
+
+                    <div class="info-line">
+                        <div class="info-label">Batch</div>
+                        <div id="idBatch" class="info-value">-</div>
+                    </div>
+
+                    <div class="info-line">
+                        <div class="info-label">Profession</div>
+                        <div id="idProfession" class="info-value">-</div>
+                    </div>
+
+                    <div class="info-line">
+                        <div class="info-label">Mobile</div>
+                        <div id="idPhone" class="info-value">-</div>
+                    </div>
+
+                    <div class="info-line">
+                        <div class="info-label">T-Shirt</div>
+                        <div id="idTshirt" class="info-value">-</div>
+                    </div>
+
+                    <div class="info-line">
+                        <div class="info-label">Payment</div>
+                        <div id="idPayment" class="info-value">
+                            APPROVED
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="qr-area">
+
+                    <div class="qr-box">
+                        <img id="idQR" alt="ID QR Code">
+                    </div>
+
+                    <div class="qr-label">
+                        VERIFY ID
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="card-bottom">
+
+                <div class="verified-seal">
+
+                    <div class="seal-check">✓</div>
+
+                    <div class="seal-word">
+                        VERIFIED
+                    </div>
+
+                    <div class="seal-year">
+                        2027
+                    </div>
+
+                </div>
+
+                <div class="verified-info">
+
+                    <div class="verified-word">
+                        ✓ VERIFIED
+                    </div>
+
+                    <div id="idVerifiedDate" class="verified-date">
+                        Verified: -
+                    </div>
+
+                    <div class="verified-status">
+                        Payment Approved
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="organised">
+                Organised by
+                <span>
+                    Paharchanda High School Alumni Association
+                </span>
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             FOOD TOKEN — NO PHOTO
+        ================================================== -->
+
+        <div id="foodCard" class="card food-card">
+
+            <div class="card-header">
+
+                <div class="school-name">
+                    ✦ PAHARCHANDA HIGH SCHOOL ✦
+                </div>
+
+                <div class="jubilee">
+                    DIAMOND JUBILEE 1965–2025
+                </div>
+
+                <div class="reunion">
+                    GRAND REUNION 2027
+                </div>
+
+                <div class="digital-title">
+                    FOOD TOKEN
+                </div>
+
+            </div>
+
+
+            <div class="card-main">
+
+                <!-- NO PHOTO AREA HERE -->
+
+                <div class="info-area">
+
+                    <div id="foodName" class="member-name">
+                        Member Name
+                    </div>
+
+                    <div id="foodMemberId" class="member-id">
+                        PHS2A-DJ-0000-000
+                    </div>
+
+                    <div class="food-token-box">
+                        FOOD TOKEN
+                    </div>
+
+                    <div class="info-line">
+                        <div class="info-label">
+                            Category
+                        </div>
+
+                        <div id="foodCategory"
+                             class="info-value">
+                            -
+                        </div>
+                    </div>
+
+                    <div class="info-line">
+                        <div class="info-label">
+                            Batch
+                        </div>
+
+                        <div id="foodBatch"
+                             class="info-value">
+                            -
+                        </div>
+                    </div>
+
+                    <div class="info-line">
+                        <div class="info-label">
+                            Status
+                        </div>
+
+                        <div class="info-value">
+                            APPROVED
+                        </div>
+                    </div>
+
+                    <div class="info-line">
+                        <div class="info-label">
+                            Token
+                        </div>
+
+                        <div class="info-value">
+                            Valid for 1 Meal
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="qr-area">
+
+                    <div class="qr-box">
+
+                        <img
+                            id="foodQR"
+                            alt="Food Token QR Code"
+                        >
+
+                    </div>
+
+                    <div class="qr-label">
+                        FOOD VERIFY
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="card-bottom">
+
+                <div class="verified-seal">
+
+                    <div class="seal-check">
+                        ✓
+                    </div>
+
+                    <div class="seal-word">
+                        VERIFIED
+                    </div>
+
+                    <div class="seal-year">
+                        2027
+                    </div>
+
+                </div>
+
+                <div class="verified-info">
+
+                    <div class="verified-word">
+                        ✓ VERIFIED
+                    </div>
+
+                    <div id="foodVerifiedDate"
+                         class="verified-date">
+                        Verified: -
+                    </div>
+
+                    <div class="verified-status">
+                        Food Token Approved
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="organised">
+                Organised by
+                <span>
+                    Paharchanda High School Alumni Association
+                </span>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="id-card.js"></script>
+
+</body>
+</html>
